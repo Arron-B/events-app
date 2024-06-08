@@ -1,7 +1,7 @@
 const db = require("../connection");
 const format = require("pg-format");
 
-const seed = ({ userData }) => {
+const seed = ({ userData, eventData, attendanceData }) => {
 	return db
 		.query(`DROP TABLE IF EXISTS attendance;`)
 		.then(() => {
@@ -29,6 +29,7 @@ const seed = ({ userData }) => {
 				description VARCHAR(1000),
 				date DATE NOT NULL,
 				time TIME NOT NULL,
+				location VARCHAR NOT NULL,
 				created_at TIMESTAMP DEFAULT NOW()
             );`
 			);
@@ -52,6 +53,38 @@ const seed = ({ userData }) => {
 				])
 			);
 			return db.query(insertUsersQueryStr);
+		})
+		.then(() => {
+			const insertEventQueryStr = format(
+				"INSERT INTO events ( title, organiser, description, date, time, location, created_at ) VALUES %L;",
+				eventData.map(
+					({
+						title,
+						organiser,
+						description,
+						date,
+						time,
+						location,
+						created_at,
+					}) => [
+						title,
+						organiser,
+						description,
+						date,
+						time,
+						location,
+						created_at,
+					]
+				)
+			);
+			return db.query(insertEventQueryStr);
+		})
+		.then(() => {
+			const insertAttendanceQueryStr = format(
+				"INSERT INTO attendance ( user_id, event_id ) VALUES %L;",
+				attendanceData.map(({ user_id, event_id }) => [user_id, event_id])
+			);
+			return db.query(insertAttendanceQueryStr);
 		});
 };
 
