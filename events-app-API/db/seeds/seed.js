@@ -2,7 +2,6 @@ const db = require("../connection");
 const format = require("pg-format");
 
 const seed = ({ userData }) => {
-	console.log("seed running");
 	return db
 		.query(`DROP TABLE IF EXISTS events;`)
 		.then(() => {
@@ -31,7 +30,6 @@ const seed = ({ userData }) => {
 				"INSERT INTO users ( username ) VALUES %L;",
 				userData.map(({ username }) => [username])
 			);
-			console.log("end of seed");
 			return db.query(insertUsersQueryStr);
 		});
 };
