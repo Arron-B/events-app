@@ -3,32 +3,53 @@ const format = require("pg-format");
 
 const seed = ({ userData }) => {
 	return db
-		.query(`DROP TABLE IF EXISTS events;`)
+		.query(`DROP TABLE IF EXISTS attendance;`)
+		.then(() => {
+			return db.query(`DROP TABLE IF EXISTS events;`);
+		})
 		.then(() => {
 			return db.query(`DROP TABLE IF EXISTS users;`);
 		})
 		.then(() => {
-			const usersTablePromise = db.query(
+			return db.query(
 				`CREATE TABLE users (
-                user_id SERIAL PRIMARY KEY,
-                username VARCHAR
+                user_id VARCHAR PRIMARY KEY,
+                name VARCHAR,
+				staff BOOL NOT NULL DEFAULT false,
+				created_at TIMESTAMP DEFAULT NOW()
             );`
 			);
-
-			const eventsTablePromise = db.query(
+		})
+		.then(() => {
+			return db.query(
 				`CREATE TABLE events (
                 event_id SERIAL PRIMARY KEY,
-                event_name VARCHAR,
-                event_creator INT REFERENCES users(user_id) NOT NULL
+                title VARCHAR,
+                organiser VARCHAR REFERENCES users(user_id) NOT NULL,
+				description VARCHAR(1000),
+				date DATE NOT NULL,
+				time TIME NOT NULL,
+				created_at TIMESTAMP DEFAULT NOW()
             );`
 			);
-
-			return Promise.all([usersTablePromise, eventsTablePromise]);
+		})
+		.then(() => {
+			return db.query(
+				`CREATE TABLE attendance (
+                user_id VARCHAR REFERENCES users(user_id) NOT NULL,
+				event_id INT REFERENCES events(event_id) NOT NULL
+            );`
+			);
 		})
 		.then(() => {
 			const insertUsersQueryStr = format(
-				"INSERT INTO users ( username ) VALUES %L;",
-				userData.map(({ username }) => [username])
+				"INSERT INTO users ( user_id, name, staff, created_at ) VALUES %L;",
+				userData.map(({ user_id, name, staff, created_at }) => [
+					user_id,
+					name,
+					staff,
+					created_at,
+				])
 			);
 			return db.query(insertUsersQueryStr);
 		});
