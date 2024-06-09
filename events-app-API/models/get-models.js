@@ -28,3 +28,19 @@ exports.fetchAllEvents = () => {
 		return allEvents;
 	});
 };
+
+exports.fetchFutureEvents = () => {
+	console.log("in model");
+	return db
+		.query(
+			`
+	SELECT * FROM events
+	WHERE date + time > NOW()
+	ORDER BY date + time;`
+		)
+		.then((res) => {
+			const futureEvents = res.rows;
+
+			return futureEvents;
+		});
+};

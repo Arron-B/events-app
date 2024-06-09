@@ -71,7 +71,7 @@ module.exports = [
 		title: "Outdoor Basketball",
 		organiser: "auth0Id3",
 		description: "Join us for a game of outdoor basketball.",
-		date: "2024-06-30",
+		date: "2024-06-01",
 		time: "18:00:00",
 		location: "112 Hoops St, F12 3MN",
 		created_at: "2024-06-01 20:30:00.217Z",

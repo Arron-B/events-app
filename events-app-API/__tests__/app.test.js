@@ -90,8 +90,6 @@ describe("GET /api/events", () => {
 					expect(typeof event.location).toBe("string");
 					expect(typeof event.created_at).toBe("string");
 
-					expect(typeof event.created_at).toBe("string");
-
 					if (event.event_id === 1) {
 						expect(event.title).toBe("badminton tourney");
 						expect(event.organiser).toBe("auth0Id3");
@@ -110,6 +108,62 @@ describe("GET /api/events", () => {
 						expect(event.location).toBe("123 Stadium Rd, M78 9AB");
 					}
 				});
+			});
+	});
+});
+
+describe("GET /api/events/upcoming", () => {
+	test("Resolves status 200 and does not list every event", () => {
+		return request(app)
+			.get("/api/events/upcoming")
+			.expect(200)
+			.then((res) => {
+				const events = res.body.events;
+				expect(events.length).toBeLessThan(15);
+			});
+	});
+
+	test("Events are in correct format and all keys are present", () => {
+		return request(app)
+			.get("/api/events/upcoming")
+			.expect(200)
+			.then((res) => {
+				const events = res.body.events;
+				expect(typeof events).toBe("object");
+				events.forEach((event) => {
+					expect(typeof event.title).toBe("string");
+					expect(typeof event.organiser).toBe("string");
+					expect(typeof event.description).toBe("string");
+					expect(typeof event.date).toBe("string");
+					expect(typeof event.time).toBe("string");
+					expect(typeof event.location).toBe("string");
+					expect(typeof event.created_at).toBe("string");
+
+					if (event.event_id === 14) {
+						expect(event).toEqual(
+							expect.objectContaining({
+								event_id: 14,
+								title: "Softball Game",
+								organiser: "auth0Id8",
+								description: "Join us for a friendly game of softball.",
+								date: expect.any(String),
+								time: expect.any(String),
+								location: "901 Diamond St, L56 7YZ",
+								created_at: expect.any(String),
+							})
+						);
+					}
+				});
+			});
+	});
+
+	test("Events are sorted by date and time in ascending order", () => {
+		return request(app)
+			.get("/api/events/upcoming")
+			.expect(200)
+			.then((res) => {
+				const events = res.body.events;
+				expect(events).toBeSortedBy("date", { descending: false });
 			});
 	});
 });

@@ -2,6 +2,7 @@ const {
 	getAllUsers,
 	getUserById,
 	getAllEvents,
+	getFutureEvents,
 } = require("./controllers/get-controllers.js");
 
 const express = require("express");
@@ -18,5 +19,7 @@ app.get("/api/users/:user_id", getUserById);
 app.get("/api/users", getAllUsers);
 
 app.get("/api/events", getAllEvents);
+
+app.get("/api/events/upcoming", getFutureEvents);
 
 module.exports = app;

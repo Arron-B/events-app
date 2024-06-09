@@ -2,6 +2,7 @@ const {
 	fetchAllUsers,
 	fetchUserById,
 	fetchAllEvents,
+	fetchFutureEvents,
 } = require("../models/get-models");
 
 exports.getUserById = (req, res, next) => {
@@ -27,6 +28,16 @@ exports.getAllUsers = (req, res, next) => {
 
 exports.getAllEvents = (req, res, next) => {
 	fetchAllEvents()
+		.then((events) => {
+			res.status(200).send({ events });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
+
+exports.getFutureEvents = (req, res, next) => {
+	fetchFutureEvents()
 		.then((events) => {
 			res.status(200).send({ events });
 		})
