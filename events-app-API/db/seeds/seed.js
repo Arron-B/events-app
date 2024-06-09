@@ -16,7 +16,7 @@ const seed = ({ userData, eventData, attendanceData }) => {
                 user_id VARCHAR PRIMARY KEY,
                 name VARCHAR,
 				staff BOOL NOT NULL DEFAULT false,
-				created_at TIMESTAMP DEFAULT NOW()
+				 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             );`
 			);
 		})

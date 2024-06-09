@@ -1,4 +1,8 @@
-const { getAllUsers } = require("./controllers/get-controllers.js");
+const {
+	getAllUsers,
+	getUserById,
+	getAllEvents,
+} = require("./controllers/get-controllers.js");
 
 const express = require("express");
 const cors = require("cors");
@@ -9,6 +13,10 @@ app.use(cors());
 
 app.use(express.json());
 
-app.get("/api/getUsers", getAllUsers);
+app.get("/api/users/:user_id", getUserById);
+
+app.get("/api/users", getAllUsers);
+
+app.get("/api/events", getAllEvents);
 
 module.exports = app;
