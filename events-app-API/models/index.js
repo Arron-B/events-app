@@ -6,6 +6,7 @@ const {
 	fetchEventById,
 	fetchAttendeeNames,
 	fetchAttendance,
+	fetchAttending,
 } = require("./get-models.js");
 
 module.exports = {
@@ -16,4 +17,5 @@ module.exports = {
 	fetchEventById,
 	fetchAttendeeNames,
 	fetchAttendance,
+	fetchAttending,
 };

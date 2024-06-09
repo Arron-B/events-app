@@ -266,3 +266,84 @@ describe("GET /api/events/:event_id/attendance", () => {
 			});
 	});
 });
+
+describe("GET /api/users/:user_id/attending", () => {
+	test("returns status 200 with all events in the correct format and each the user is attending", () => {
+		return request(app)
+			.get("/api/users/auth0Id1/attending")
+			.expect(200)
+			.then((res) => {
+				const attending = res.body.attending;
+				expect(typeof attending).toBe("object");
+				expect(attending.length).toBe(6);
+				expect(attending).toStrictEqual(
+					expect.arrayContaining([
+						{
+							event_id: 1,
+							title: "badminton tourney",
+							organiser: "auth0Id3",
+							description:
+								"Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
+							date: expect.any(String),
+							time: expect.any(String),
+							location: "404 not found ave, A04 1NF",
+							created_at: expect.any(String),
+						},
+						{
+							event_id: 6,
+							title: "Tennis Championship",
+							organiser: "auth0Id18",
+							description:
+								"Participate in our tennis championship for a chance to win great prizes.",
+							date: expect.any(String),
+							time: expect.any(String),
+							location: "789 Court Dr, D56 7IJ",
+							created_at: expect.any(String),
+						},
+						{
+							event_id: 7,
+							title: "Charity Fun Run",
+							organiser: "auth0Id20",
+							description:
+								"Participate in our charity run to raise funds for a good cause.",
+							date: expect.any(String),
+							time: expect.any(String),
+							location: "101 Riverside Dr, E78 9KL",
+							created_at: expect.any(String),
+						},
+						{
+							event_id: 10,
+							title: "Swimming Gala",
+							organiser: "auth0Id18",
+							description:
+								"Compete in our swimming gala with various categories.",
+							date: expect.any(String),
+							time: expect.any(String),
+							location: "567 Pool Rd, H67 8QR",
+							created_at: expect.any(String),
+						},
+						{
+							event_id: 13,
+							title: "Archery Competition",
+							organiser: "auth0Id12",
+							description: "Show off your archery skills in our competition.",
+							date: expect.any(String),
+							time: expect.any(String),
+							location: "890 Target Ln, K34 5WX",
+							created_at: expect.any(String),
+						},
+						{
+							event_id: 15,
+							title: "Track and Field Meet",
+							organiser: "auth0Id5",
+							description: "Compete in various track and field events.",
+							date: expect.any(String),
+							time: expect.any(String),
+							location: "123 Stadium Rd, M78 9AB",
+							created_at: expect.any(String),
+						},
+					])
+				);
+			});
+	});
+});

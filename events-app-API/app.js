@@ -6,6 +6,7 @@ const {
 	getEventById,
 	getAttendeeNames,
 	getAttendance,
+	getAttending,
 } = require("./controllers/index.js");
 
 const express = require("express");
@@ -20,6 +21,8 @@ app.use(express.json());
 app.get("/api/users/:user_id", getUserById);
 
 app.get("/api/users", getAllUsers);
+
+app.get("/api/users/:user_id/attending", getAttending);
 
 app.get("/api/events", getAllEvents);
 

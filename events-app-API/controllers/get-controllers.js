@@ -6,6 +6,7 @@ const {
 	fetchEventById,
 	fetchAttendeeNames,
 	fetchAttendance,
+	fetchAttending,
 } = require("../models/index.js");
 
 exports.getUserById = (req, res, next) => {
@@ -76,6 +77,17 @@ exports.getAttendance = (req, res, next) => {
 	fetchAttendance(event_id)
 		.then((attendance) => {
 			res.status(200).send({ attendance });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
+
+exports.getAttending = (req, res, next) => {
+	const { user_id } = req.params;
+	fetchAttending(user_id)
+		.then((attending) => {
+			res.status(200).send({ attending });
 		})
 		.catch((err) => {
 			next(err);

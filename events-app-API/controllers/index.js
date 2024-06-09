@@ -6,6 +6,7 @@ const {
 	getEventById,
 	getAttendeeNames,
 	getAttendance,
+	getAttending,
 } = require("./get-controllers.js");
 
 module.exports = {
@@ -16,4 +17,5 @@ module.exports = {
 	getEventById,
 	getAttendeeNames,
 	getAttendance,
+	getAttending,
 };

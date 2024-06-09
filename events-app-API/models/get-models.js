@@ -4,7 +4,7 @@ exports.fetchUserById = (user_id) => {
 	return db
 		.query(
 			`SELECT * FROM users
-		WHERE user_id = $1;`,
+			WHERE user_id = $1;`,
 			[user_id]
 		)
 		.then((res) => {
@@ -61,9 +61,9 @@ exports.fetchAttendeeNames = (event_id) => {
 	return db
 		.query(
 			`SELECT u.name FROM users u
-	LEFT JOIN attendance a
-	ON u.user_id = a.user_id
-	WHERE a.event_id = $1;`,
+			LEFT JOIN attendance a
+			ON u.user_id = a.user_id
+			WHERE a.event_id = $1;`,
 			[event_id]
 		)
 		.then((res) => {
@@ -76,11 +76,26 @@ exports.fetchAttendance = (event_id) => {
 	return db
 		.query(
 			`SELECT COUNT(*)::INT AS attendance FROM attendance
-		WHERE event_id = $1;`,
+			WHERE event_id = $1;`,
 			[event_id]
 		)
 		.then((res) => {
 			const attendance = res.rows[0];
 			return attendance;
+		});
+};
+
+exports.fetchAttending = (user_id) => {
+	return db
+		.query(
+			`SELECT e.* FROM events e
+			INNER JOIN attendance a
+			ON a.event_id = e.event_id
+			WHERE a.user_id = $1;`,
+			[user_id]
+		)
+		.then((res) => {
+			const attending = res.rows;
+			return attending;
 		});
 };
