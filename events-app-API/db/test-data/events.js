@@ -7,7 +7,7 @@ module.exports = [
 		date: "2024-06-20",
 		time: "12:00:00",
 		location: "404 not found ave, A04 1NF",
-		created_at: "2024-04-18 14:50:39.217284-07",
+		created_at: "2024-04-18 14:50:39.217Z",
 	},
 	{
 		title: "Trailblazers",
@@ -17,7 +17,7 @@ module.exports = [
 		date: "2024-06-28",
 		time: "10:30:00",
 		location: "25 someplace drive, S29 4VU",
-		created_at: "2024-05-09 13:37:54.217284-07",
+		created_at: "2024-05-09 13:37:54.217Z",
 	},
 	{
 		title: "Hike 2gether",
@@ -26,7 +26,7 @@ module.exports = [
 		date: "2024-07-03",
 		time: "13:00:00",
 		location: "100 Fake st, F1 3KB",
-		created_at: "2024-05-28 10:23:03.217284-07",
+		created_at: "2024-05-28 10:23:03.217Z",
 	},
 	{
 		title: "Summer Soccer League",
@@ -36,7 +36,7 @@ module.exports = [
 		date: "2024-07-10",
 		time: "16:00:00",
 		location: "200 Soccer Field Ln, G12 4XY",
-		created_at: "2024-05-20 09:15:10.217284-07",
+		created_at: "2024-05-20 09:15:10.217Z",
 	},
 	{
 		title: "Beach Volleyball",
@@ -45,7 +45,7 @@ module.exports = [
 		date: "2024-08-10",
 		time: "11:00:00",
 		location: "456 Ocean Blvd, C34 5GH",
-		created_at: "2024-06-10 11:20:33.217284-07",
+		created_at: "2024-06-10 11:20:33.217Z",
 	},
 	{
 		title: "Tennis Championship",
@@ -55,7 +55,7 @@ module.exports = [
 		date: "2024-06-15",
 		time: "09:00:00",
 		location: "789 Court Dr, D56 7IJ",
-		created_at: "2024-04-30 14:55:29.217284-07",
+		created_at: "2024-04-30 14:55:29.217Z",
 	},
 	{
 		title: "Charity Fun Run",
@@ -65,16 +65,16 @@ module.exports = [
 		date: "2024-07-22",
 		time: "08:00:00",
 		location: "101 Riverside Dr, E78 9KL",
-		created_at: "2024-05-12 08:45:00.217284-07",
+		created_at: "2024-05-12 08:45:00.217Z",
 	},
 	{
 		title: "Outdoor Basketball",
 		organiser: "auth0Id3",
 		description: "Join us for a game of outdoor basketball.",
-		date: "2024-06-30",
+		date: "2024-06-01",
 		time: "18:00:00",
 		location: "112 Hoops St, F12 3MN",
-		created_at: "2024-06-01 20:30:00.217284-07",
+		created_at: "2024-06-01 20:30:00.217Z",
 	},
 	{
 		title: "Yoga in the Park",
@@ -83,7 +83,7 @@ module.exports = [
 		date: "2024-07-05",
 		time: "07:00:00",
 		location: "345 Tranquil Ln, G45 6OP",
-		created_at: "2024-05-25 07:15:10.217284-07",
+		created_at: "2024-05-25 07:15:10.217Z",
 	},
 	{
 		title: "Swimming Gala",
@@ -92,7 +92,7 @@ module.exports = [
 		date: "2024-08-25",
 		time: "09:00:00",
 		location: "567 Pool Rd, H67 8QR",
-		created_at: "2024-06-05 11:35:45.217284-07",
+		created_at: "2024-06-05 11:35:45.217Z",
 	},
 	{
 		title: "Cycling Marathon",
@@ -101,7 +101,7 @@ module.exports = [
 		date: "2024-06-22",
 		time: "08:00:00",
 		location: "678 Bike Path, I89 0ST",
-		created_at: "2024-05-15 14:00:00.217284-07",
+		created_at: "2024-05-15 14:00:00.217Z",
 	},
 	{
 		title: "Ultimate Frisbee",
@@ -110,7 +110,7 @@ module.exports = [
 		date: "2024-07-12",
 		time: "17:00:00",
 		location: "789 Field Rd, J01 2UV",
-		created_at: "2024-06-02 09:20:15.217284-07",
+		created_at: "2024-06-02 09:20:15.217Z",
 	},
 	{
 		title: "Archery Competition",
@@ -119,7 +119,7 @@ module.exports = [
 		date: "2024-08-05",
 		time: "15:00:00",
 		location: "890 Target Ln, K34 5WX",
-		created_at: "2024-05-29 18:30:45.217284-07",
+		created_at: "2024-05-29 18:30:45.217Z",
 	},
 	{
 		title: "Softball Game",
@@ -128,7 +128,7 @@ module.exports = [
 		date: "2024-07-20",
 		time: "14:00:00",
 		location: "901 Diamond St, L56 7YZ",
-		created_at: "2024-06-15 17:45:55.217284-07",
+		created_at: "2024-06-15 17:45:55.217Z",
 	},
 	{
 		title: "Track and Field Meet",
@@ -137,6 +137,6 @@ module.exports = [
 		date: "2024-08-18",
 		time: "09:00:00",
 		location: "123 Stadium Rd, M78 9AB",
-		created_at: "2024-06-08 10:55:30.217284-07",
+		created_at: "2024-06-08 10:55:30.217Z",
 	},
 ];

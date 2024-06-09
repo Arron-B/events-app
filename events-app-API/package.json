@@ -1,5 +1,10 @@
 {
 	"name": "events-app-api",
+	"jest": {
+		"setupFilesAfterEnv": [
+			"jest-sorted"
+		]
+	},
 	"version": "1.0.0",
 	"description": "API-events-app",
 	"main": "app.js",
@@ -21,6 +26,7 @@
 	},
 	"devDependencies": {
 		"jest": "^29.7.0",
+		"jest-sorted": "^1.0.15",
 		"supertest": "^7.0.0"
 	}
 }
