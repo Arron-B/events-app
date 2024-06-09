@@ -167,3 +167,102 @@ describe("GET /api/events/upcoming", () => {
 			});
 	});
 });
+
+describe("GET /api/events/:event_id", () => {
+	test("Resolves with status 200 and sends back correct type and format", () => {
+		return request(app)
+			.get("/api/events/1")
+			.expect(200)
+			.then((res) => {
+				const event = res.body.event;
+				expect(typeof event).toBe("object");
+				expect(event).toEqual(
+					expect.objectContaining({
+						title: "badminton tourney",
+						organiser: "auth0Id3",
+						description:
+							"Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
+						date: expect.any(String),
+						time: expect.any(String),
+						location: "404 not found ave, A04 1NF",
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+	test("Resolves with status 200 and sends back correct type and format when event_id is more than 1 digit", () => {
+		return request(app)
+			.get("/api/events/11")
+			.expect(200)
+			.then((res) => {
+				const event = res.body.event;
+				expect(typeof event).toBe("object");
+				expect(event).toEqual(
+					expect.objectContaining({
+						title: "Cycling Marathon",
+						organiser: "auth0Id20",
+						description: "Join our cycling marathon through scenic routes.",
+						date: expect.any(String),
+						time: expect.any(String),
+						location: "678 Bike Path, I89 0ST",
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+});
+
+describe("GET /api/events/:event_id/attendees", () => {
+	test("resolves status 200 and correct names and amount of names for an events attendees", () => {
+		return request(app)
+			.get("/api/events/1/attendees")
+			.expect(200)
+			.then((res) => {
+				const attendees = res.body.attendees;
+				expect(typeof attendees).toBe("object");
+				expect(attendees.length).toBe(3);
+				expect(attendees).toEqual(
+					expect.arrayContaining([
+						{ name: "Thomas Anderson" },
+						{ name: "Pietro Maximoff" },
+						{ name: "Nick Fury" },
+					])
+				);
+			});
+	});
+
+	test("Sends back empty array for an event with no attendees. Works with multiple digit event_ids.", () => {
+		return request(app)
+			.get("/api/events/11/attendees")
+			.expect(200)
+			.then((res) => {
+				const attendees = res.body.attendees;
+				expect(typeof attendees).toBe("object");
+				expect(attendees.length).toBe(0);
+			});
+	});
+});
+
+describe("GET /api/events/:event_id/attendance", () => {
+	test("resolves status 200 and correct count of people attending the event", () => {
+		return request(app)
+			.get("/api/events/1/attendance")
+			.expect(200)
+			.then((res) => {
+				const attendance = res.body.attendance;
+				expect(typeof attendance.attendance).toBe("number");
+				expect(attendance.attendance).toBe(3);
+			});
+	});
+
+	test("returns a count of 0 for an event with no attendees", () => {
+		return request(app)
+			.get("/api/events/11/attendance")
+			.expect(200)
+			.then((res) => {
+				const attendance = res.body.attendance;
+				expect(typeof attendance.attendance).toBe("number");
+				expect(attendance.attendance).toBe(0);
+			});
+	});
+});

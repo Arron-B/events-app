@@ -3,7 +3,10 @@ const {
 	fetchUserById,
 	fetchAllEvents,
 	fetchFutureEvents,
-} = require("../models/get-models");
+	fetchEventById,
+	fetchAttendeeNames,
+	fetchAttendance,
+} = require("../models/index.js");
 
 exports.getUserById = (req, res, next) => {
 	const { user_id } = req.params;
@@ -40,6 +43,39 @@ exports.getFutureEvents = (req, res, next) => {
 	fetchFutureEvents()
 		.then((events) => {
 			res.status(200).send({ events });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
+
+exports.getEventById = (req, res, next) => {
+	const { event_id } = req.params;
+	fetchEventById(event_id)
+		.then((event) => {
+			res.status(200).send({ event });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
+
+exports.getAttendeeNames = (req, res, next) => {
+	const { event_id } = req.params;
+	fetchAttendeeNames(event_id)
+		.then((attendees) => {
+			res.status(200).send({ attendees });
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
+
+exports.getAttendance = (req, res, next) => {
+	const { event_id } = req.params;
+	fetchAttendance(event_id)
+		.then((attendance) => {
+			res.status(200).send({ attendance });
 		})
 		.catch((err) => {
 			next(err);

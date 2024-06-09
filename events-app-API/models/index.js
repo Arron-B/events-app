@@ -1,3 +1,19 @@
-const { fetchAllUsers } = require("./get-models.js");
+const {
+	fetchAllUsers,
+	fetchUserById,
+	fetchAllEvents,
+	fetchFutureEvents,
+	fetchEventById,
+	fetchAttendeeNames,
+	fetchAttendance,
+} = require("./get-models.js");
 
-module.exports = { fetchAllUsers };
+module.exports = {
+	fetchAllUsers,
+	fetchUserById,
+	fetchAllEvents,
+	fetchFutureEvents,
+	fetchEventById,
+	fetchAttendeeNames,
+	fetchAttendance,
+};

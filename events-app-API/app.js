@@ -3,7 +3,10 @@ const {
 	getUserById,
 	getAllEvents,
 	getFutureEvents,
-} = require("./controllers/get-controllers.js");
+	getEventById,
+	getAttendeeNames,
+	getAttendance,
+} = require("./controllers/index.js");
 
 const express = require("express");
 const cors = require("cors");
@@ -21,5 +24,11 @@ app.get("/api/users", getAllUsers);
 app.get("/api/events", getAllEvents);
 
 app.get("/api/events/upcoming", getFutureEvents);
+
+app.get("/api/events/:event_id", getEventById);
+
+app.get("/api/events/:event_id/attendees", getAttendeeNames);
+
+app.get("/api/events/:event_id/attendance", getAttendance);
 
 module.exports = app;
