@@ -25,20 +25,20 @@ describe("GET /api/users/:user_id", () => {
 			});
 	});
 
-	test("resolves status 200 and correct data for a user with longer ID", () => {
+	test("resolves status 200 and correct data for a user with longer ID and a that is a staff member", () => {
 		return request(app)
-			.get("/api/users/auth0Id10")
+			.get("/api/users/auth0Id22")
 			.expect(200)
 			.then((res) => {
 				const user = res.body.user;
 				expect(user).toEqual(
 					expect.objectContaining({
-						user_id: "auth0Id10",
-						name: "Diana Prince",
-						staff: false,
+						user_id: "auth0Id22",
+						name: "Stephen Strange",
+						staff: true,
+						created_at: expect.any(String),
 					})
 				);
-				expect(typeof user.created_at).toBe("string");
 			});
 	});
 });
