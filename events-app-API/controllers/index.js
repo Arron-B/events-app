@@ -13,8 +13,7 @@ const {
 	addNewUser,
 	addNewEvent,
 	addAttendee,
-	patchUserStaff,
-	patchUserName,
+	patchUser,
 	patchEvent,
 } = require("./add-controllers.js");
 
@@ -39,8 +38,7 @@ module.exports = {
 	addNewUser,
 	addNewEvent,
 	addAttendee,
-	patchUserStaff,
-	patchUserName,
+	patchUser,
 	patchEvent,
 	deleteAttendance,
 	deleteEvent,

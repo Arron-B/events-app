@@ -13,8 +13,7 @@ const {
 	insertNewUser,
 	insertNewEvent,
 	insertAttendee,
-	updateUserStaff,
-	updateUserName,
+	updateUser,
 	updateEvent,
 } = require("./add-models.js");
 
@@ -33,8 +32,7 @@ module.exports = {
 	insertNewUser,
 	insertNewEvent,
 	insertAttendee,
-	updateUserStaff,
-	updateUserName,
+	updateUser,
 	updateEvent,
 	removeAttendanceFromDb,
 	removeEventFromDb,
