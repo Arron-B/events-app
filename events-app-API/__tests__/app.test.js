@@ -85,8 +85,7 @@ describe("GET /api/events", () => {
 					expect(typeof event.title).toBe("string");
 					expect(typeof event.organiser).toBe("string");
 					expect(typeof event.description).toBe("string");
-					expect(typeof event.date).toBe("string");
-					expect(typeof event.time).toBe("string");
+					expect(typeof event.datetime).toBe("string");
 					expect(typeof event.location).toBe("string");
 					expect(typeof event.created_at).toBe("string");
 
@@ -96,7 +95,9 @@ describe("GET /api/events", () => {
 						expect(event.description).toBe(
 							"Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!"
 						);
+						expect(event.datetime).toBe("2024-06-20T12:00:00.000Z");
 						expect(event.location).toBe("404 not found ave, A04 1NF");
+						expect(event.created_at).toBe("2024-04-18T14:50:39.217Z");
 					}
 
 					if (event.event_id === 25) {
@@ -105,7 +106,9 @@ describe("GET /api/events", () => {
 						expect(event.description).toBe(
 							"Compete in various track and field events."
 						);
+						expect(event.datetime).toBe("2024-08-18T09:00:00.000Z");
 						expect(event.location).toBe("123 Stadium Rd, M78 9AB");
+						expect(event.created_at).toBe("2024-06-08T10:55:30.217Z");
 					}
 				});
 			});
@@ -134,8 +137,7 @@ describe("GET /api/events/upcoming", () => {
 					expect(typeof event.title).toBe("string");
 					expect(typeof event.organiser).toBe("string");
 					expect(typeof event.description).toBe("string");
-					expect(typeof event.date).toBe("string");
-					expect(typeof event.time).toBe("string");
+					expect(typeof event.datetime).toBe("string");
 					expect(typeof event.location).toBe("string");
 					expect(typeof event.created_at).toBe("string");
 
@@ -146,10 +148,9 @@ describe("GET /api/events/upcoming", () => {
 								title: "Softball Game",
 								organiser: "auth0Id8",
 								description: "Join us for a friendly game of softball.",
-								date: expect.any(String),
-								time: expect.any(String),
+								datetime: "2024-07-20T14:00:00.000Z",
 								location: "901 Diamond St, L56 7YZ",
-								created_at: expect.any(String),
+								created_at: "2024-06-15T17:45:55.217Z",
 							})
 						);
 					}
@@ -163,7 +164,7 @@ describe("GET /api/events/upcoming", () => {
 			.expect(200)
 			.then((res) => {
 				const events = res.body.events;
-				expect(events).toBeSortedBy("date", { descending: false });
+				expect(events).toBeSortedBy("datetime", { descending: false });
 			});
 	});
 });
@@ -182,10 +183,9 @@ describe("GET /api/events/:event_id", () => {
 						organiser: "auth0Id3",
 						description:
 							"Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
-						date: expect.any(String),
-						time: expect.any(String),
+						datetime: "2024-06-20T12:00:00.000Z",
 						location: "404 not found ave, A04 1NF",
-						created_at: expect.any(String),
+						created_at: "2024-04-18T14:50:39.217Z",
 					})
 				);
 			});
@@ -202,10 +202,9 @@ describe("GET /api/events/:event_id", () => {
 						title: "Cycling Marathon",
 						organiser: "auth0Id20",
 						description: "Join our cycling marathon through scenic routes.",
-						date: expect.any(String),
-						time: expect.any(String),
+						datetime: "2024-06-22T08:00:00.000Z",
 						location: "678 Bike Path, I89 0ST",
-						created_at: expect.any(String),
+						created_at: "2024-05-15T14:00:00.217Z",
 					})
 				);
 			});
@@ -284,10 +283,9 @@ describe("GET /api/users/:user_id/attending", () => {
 							organiser: "auth0Id3",
 							description:
 								"Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
-							date: expect.any(String),
-							time: expect.any(String),
+							datetime: "2024-06-20T12:00:00.000Z",
 							location: "404 not found ave, A04 1NF",
-							created_at: expect.any(String),
+							created_at: "2024-04-18T14:50:39.217Z",
 						},
 						{
 							event_id: 6,
@@ -295,10 +293,9 @@ describe("GET /api/users/:user_id/attending", () => {
 							organiser: "auth0Id18",
 							description:
 								"Participate in our tennis championship for a chance to win great prizes.",
-							date: expect.any(String),
-							time: expect.any(String),
+							datetime: "2024-06-15T09:00:00.000Z",
 							location: "789 Court Dr, D56 7IJ",
-							created_at: expect.any(String),
+							created_at: "2024-04-30T14:55:29.217Z",
 						},
 						{
 							event_id: 7,
@@ -306,10 +303,9 @@ describe("GET /api/users/:user_id/attending", () => {
 							organiser: "auth0Id20",
 							description:
 								"Participate in our charity run to raise funds for a good cause.",
-							date: expect.any(String),
-							time: expect.any(String),
+							datetime: "2024-07-22T08:00:00.000Z",
 							location: "101 Riverside Dr, E78 9KL",
-							created_at: expect.any(String),
+							created_at: "2024-05-12T08:45:00.217Z",
 						},
 						{
 							event_id: 10,
@@ -317,32 +313,87 @@ describe("GET /api/users/:user_id/attending", () => {
 							organiser: "auth0Id18",
 							description:
 								"Compete in our swimming gala with various categories.",
-							date: expect.any(String),
-							time: expect.any(String),
+							datetime: "2024-08-25T09:00:00.000Z",
 							location: "567 Pool Rd, H67 8QR",
-							created_at: expect.any(String),
+							created_at: "2024-06-05T11:35:45.217Z",
 						},
 						{
 							event_id: 13,
 							title: "Archery Competition",
 							organiser: "auth0Id12",
 							description: "Show off your archery skills in our competition.",
-							date: expect.any(String),
-							time: expect.any(String),
+							datetime: "2024-08-05T15:00:00.000Z",
 							location: "890 Target Ln, K34 5WX",
-							created_at: expect.any(String),
+							created_at: "2024-05-29T18:30:45.217Z",
 						},
 						{
 							event_id: 15,
 							title: "Track and Field Meet",
 							organiser: "auth0Id5",
 							description: "Compete in various track and field events.",
-							date: expect.any(String),
-							time: expect.any(String),
+							datetime: "2024-08-18T09:00:00.000Z",
 							location: "123 Stadium Rd, M78 9AB",
-							created_at: expect.any(String),
+							created_at: "2024-06-08T10:55:30.217Z",
 						},
 					])
+				);
+			});
+	});
+});
+
+describe("POST /api/users", () => {
+	test("resolves with status 201 and returns correct user details.", () => {
+		const newUser = {
+			user_id: "auth0Id99",
+			name: "Mark Grayson",
+			staff: false,
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(201)
+			.then((res) => {
+				const user = res.body.user;
+				expect(user).toEqual(
+					expect.objectContaining({
+						user_id: "auth0Id99",
+						name: "Mark Grayson",
+						staff: false,
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+});
+
+describe("POST /api/events", () => {
+	test("resolves with status 201 and returns correct event details.", () => {
+		const newEvent = {
+			title: "Powerlifting meet",
+			organiser: "auth0Id18",
+			description:
+				"Compete with others in your weight class to pick up the heaviest things!",
+			datetime: "2024-08-29T23:00:00.000Z",
+			location: "200 Juicy St, B16 8OI",
+		};
+		return request(app)
+			.post("/api/events")
+			.send(newEvent)
+			.expect(201)
+			.then((res) => {
+				const event = res.body.event;
+				console.log(event);
+				expect(event).toEqual(
+					expect.objectContaining({
+						event_id: 16,
+						title: "Powerlifting meet",
+						organiser: "auth0Id18",
+						description:
+							"Compete with others in your weight class to pick up the heaviest things!",
+						datetime: "2024-08-29T23:00:00.000Z",
+						location: "200 Juicy St, B16 8OI",
+						created_at: expect.any(String),
+					})
 				);
 			});
 	});

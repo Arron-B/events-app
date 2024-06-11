@@ -7,9 +7,25 @@ const {
 	updateEvent,
 } = require("../models/index.js");
 
-exports.addNewUser = (req, res, next) => {};
+exports.addNewUser = (req, res, next) => {
+	const { user_id, name, staff } = req.body;
 
-exports.addNewEvent = (req, res, next) => {};
+	insertNewUser(user_id, name, staff)
+		.then((user) => {
+			res.status(201).send({ user });
+		})
+		.catch((err) => next(err));
+};
+
+exports.addNewEvent = (req, res, next) => {
+	const { title, organiser, description, datetime, location } = req.body;
+
+	insertNewEvent(title, organiser, description, datetime, location)
+		.then((event) => {
+			res.status(201).send({ event });
+		})
+		.catch((err) => next(err));
+};
 
 exports.addAttendee = (req, res, next) => {};
 

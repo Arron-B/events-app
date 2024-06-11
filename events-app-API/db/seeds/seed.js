@@ -3,7 +3,11 @@ const format = require("pg-format");
 
 const seed = ({ userData, eventData, attendanceData }) => {
 	return db
-		.query(`DROP TABLE IF EXISTS attendance;`)
+		.query(`SET TIME ZONE 'UTC';`)
+		.then(() => {
+			return db.query(`DROP TABLE IF EXISTS attendance;`);
+		})
+
 		.then(() => {
 			return db.query(`DROP TABLE IF EXISTS events;`);
 		})
@@ -13,7 +17,7 @@ const seed = ({ userData, eventData, attendanceData }) => {
 		.then(() => {
 			return db.query(
 				`CREATE TABLE users (
-                user_id VARCHAR PRIMARY KEY,
+                user_id VARCHAR PRIMARY KEY UNIQUE,
                 name VARCHAR,
 				staff BOOL NOT NULL DEFAULT false,
 				 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
@@ -27,8 +31,7 @@ const seed = ({ userData, eventData, attendanceData }) => {
                 title VARCHAR,
                 organiser VARCHAR REFERENCES users(user_id) NOT NULL,
 				description VARCHAR(1000),
-				date DATE NOT NULL,
-				time TIME NOT NULL,
+				datetime TIMESTAMP NOT NULL,
 				location VARCHAR NOT NULL,
 				created_at TIMESTAMP DEFAULT NOW()
             );`
@@ -56,25 +59,16 @@ const seed = ({ userData, eventData, attendanceData }) => {
 		})
 		.then(() => {
 			const insertEventQueryStr = format(
-				"INSERT INTO events ( title, organiser, description, date, time, location, created_at ) VALUES %L;",
+				"INSERT INTO events ( title, organiser, description, datetime, location, created_at ) VALUES %L;",
 				eventData.map(
 					({
 						title,
 						organiser,
 						description,
-						date,
-						time,
+						datetime,
 						location,
 						created_at,
-					}) => [
-						title,
-						organiser,
-						description,
-						date,
-						time,
-						location,
-						created_at,
-					]
+					}) => [title, organiser, description, datetime, location, created_at]
 				)
 			);
 			return db.query(insertEventQueryStr);
