@@ -382,7 +382,7 @@ describe("POST /api/events", () => {
 			.expect(201)
 			.then((res) => {
 				const event = res.body.event;
-				console.log(event);
+
 				expect(event).toEqual(
 					expect.objectContaining({
 						event_id: 16,
@@ -393,6 +393,28 @@ describe("POST /api/events", () => {
 						datetime: "2024-08-29T23:00:00.000Z",
 						location: "200 Juicy St, B16 8OI",
 						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+});
+
+describe("POST /api/events/:event_id/user_id", () => {
+	test("resolves with status 201 and returns correct attendance details.", () => {
+		const newAttendance = {
+			user_id: "auth0Id2",
+			event_id: 1,
+		};
+		return request(app)
+			.post("/api/events/1/auth0Id2")
+			.send(newAttendance)
+			.expect(201)
+			.then((res) => {
+				const attendance = res.body.attendance;
+				expect(attendance).toEqual(
+					expect.objectContaining({
+						user_id: "auth0Id2",
+						event_id: 1,
 					})
 				);
 			});

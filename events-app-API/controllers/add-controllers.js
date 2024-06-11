@@ -27,7 +27,15 @@ exports.addNewEvent = (req, res, next) => {
 		.catch((err) => next(err));
 };
 
-exports.addAttendee = (req, res, next) => {};
+exports.addAttendee = (req, res, next) => {
+	const { user_id, event_id } = req.body;
+
+	insertAttendee(user_id, event_id)
+		.then((attendance) => {
+			res.status(201).send({ attendance });
+		})
+		.catch((err) => next(err));
+};
 
 exports.patchUserStaff = (req, res, next) => {};
 
