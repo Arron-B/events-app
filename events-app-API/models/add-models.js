@@ -52,8 +52,47 @@ exports.insertAttendee = (user_id, event_id) => {
 		});
 };
 
-exports.updateUserStaff = () => {};
+exports.updateUser = (user_id, staff, name) => {
+	let query = ``;
 
-exports.updateUserName = () => {};
+	if (staff) {
+		query = `
+        UPDATE users
+        SET staff = $1
+        WHERE user_id = $2
+        RETURNING user_id, name, staff, created_at AT TIME ZONE 'UTC' AS created_at;
+        `;
+	}
 
-exports.updateEvent = () => {};
+	if (name) {
+		query = `
+        UPDATE users
+        SET name = $1
+        WHERE user_id = $2
+        RETURNING user_id, name, staff, created_at AT TIME ZONE 'UTC' AS created_at;
+        `;
+	}
+
+	return db.query(query, [staff || name, user_id]).then((res) => {
+		const updatedUser = res.rows[0];
+		return updatedUser;
+	});
+};
+
+exports.updateEvent = (event_id, title, description, datetime, location) => {
+	console.log("in model");
+	return db
+		.query(
+			`
+    UPDATE events
+SET title = $2, description = $3, datetime = $4, location = $5
+WHERE event_id = $1
+RETURNING event_id, title, organiser, description, datetime AT TIME ZONE 'UTC' AS datetime, location, created_at AT TIME ZONE 'UTC' AS created_at;
+    `,
+			[event_id, title, description, datetime, location]
+		)
+		.then((res) => {
+			const event = res.rows[0];
+			return event;
+		});
+};

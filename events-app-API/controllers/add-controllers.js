@@ -2,8 +2,7 @@ const {
 	insertNewUser,
 	insertNewEvent,
 	insertAttendee,
-	updateUserStaff,
-	updateUserName,
+	updateUser,
 	updateEvent,
 } = require("../models/index.js");
 
@@ -37,8 +36,23 @@ exports.addAttendee = (req, res, next) => {
 		.catch((err) => next(err));
 };
 
-exports.patchUserStaff = (req, res, next) => {};
+exports.patchUser = (req, res, next) => {
+	const { user_id } = req.params;
+	const { staff, name } = req.body;
+	updateUser(user_id, staff, name)
+		.then((user) => {
+			res.status(200).send({ user });
+		})
+		.catch((err) => next(err));
+};
 
-exports.patchUserName = (req, res, next) => {};
-
-exports.patchEvent = (req, res, next) => {};
+exports.patchEvent = (req, res, next) => {
+	const { event_id } = req.params;
+	const { title, description, datetime, location } = req.body;
+	updateEvent(event_id, title, description, datetime, location)
+		.then((event) => {
+			console.log("back in controller");
+			res.status(200).send({ event });
+		})
+		.catch((err) => next(err));
+};

@@ -420,3 +420,106 @@ describe("POST /api/events/:event_id/user_id", () => {
 			});
 	});
 });
+
+describe("PATCH /api/users/:user_id", () => {
+	test("resolves with status 200 and returns an updated user with altered staff column", () => {
+		const patchUser = { staff: true };
+
+		return request(app)
+			.patch("/api/users/auth0Id1")
+			.expect(200)
+			.send(patchUser)
+			.then((res) => {
+				const updatedUser = res.body.user;
+				expect(updatedUser).toEqual(
+					expect.objectContaining({
+						user_id: "auth0Id1",
+						name: "Thomas Anderson",
+						staff: true,
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+
+	test("resolves with status 200 and returns an updated user with name column", () => {
+		const patchUser = { name: "Michael Jordan" };
+
+		return request(app)
+			.patch("/api/users/auth0Id19")
+			.expect(200)
+			.send(patchUser)
+			.then((res) => {
+				const updatedUser = res.body.user;
+				expect(updatedUser).toEqual(
+					expect.objectContaining({
+						user_id: "auth0Id19",
+						name: "Michael Jordan",
+						staff: false,
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+});
+
+describe("/api/events/:event_id", () => {
+	test("resolves with status 200 and returns an updated event with 1 altered column", () => {
+		const patchEvent = {
+			title: "badminton tourney",
+			description:
+				"Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
+			location: "404 not found ave, A04 1NF",
+			datetime: "2024-06-20T15:00:00.000Z",
+		};
+
+		return request(app)
+			.patch("/api/events/1")
+			.expect(200)
+			.send(patchEvent)
+			.then((res) => {
+				const updatedEvent = res.body.event;
+				expect(updatedEvent).toEqual(
+					expect.objectContaining({
+						event_id: 1,
+						title: "badminton tourney",
+						organiser: "auth0Id3",
+						description:
+							"Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
+						datetime: "2024-06-20T15:00:00.000Z",
+						location: "404 not found ave, A04 1NF",
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+
+	test("Successfully updates an event with multiple altered columns", () => {
+		const patchEvent = {
+			title: "Athletics meet",
+			description: "Compete in various athletics events.",
+			location: "123 Stadium Rd, M78 9AB",
+			datetime: "2024-08-17T10:00:00.000Z",
+		};
+
+		return request(app)
+			.patch("/api/events/15")
+			.expect(200)
+			.send(patchEvent)
+			.then((res) => {
+				const updatedEvent = res.body.event;
+				console.log(updatedEvent);
+				expect(updatedEvent).toEqual(
+					expect.objectContaining({
+						event_id: 15,
+						title: "Athletics meet",
+						organiser: "auth0Id5",
+						description: "Compete in various athletics events.",
+						datetime: "2024-08-17T10:00:00.000Z",
+						location: "123 Stadium Rd, M78 9AB",
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+});

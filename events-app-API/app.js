@@ -10,8 +10,7 @@ const {
 	addNewUser,
 	addNewEvent,
 	addAttendee,
-	patchUserStaff,
-	patchUserName,
+	patchUser,
 	patchEvent,
 	deleteAttendance,
 	deleteEvent,
@@ -54,9 +53,7 @@ app.post("/api/events/:event_id/:user_id", addAttendee);
 
 //////////// Update Endpoints //////////////
 
-app.patch("/api/users/:user_id/staff", patchUserStaff);
-
-app.patch("/api/users/:user_id/name", patchUserName);
+app.patch("/api/users/:user_id", patchUser);
 
 app.patch("/api/events/:event_id", patchEvent);
 
