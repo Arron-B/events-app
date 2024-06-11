@@ -22,20 +22,24 @@ exports.fetchAllUsers = () => {
 };
 
 exports.fetchAllEvents = () => {
-	return db.query(`SELECT * FROM events;`).then((res) => {
-		const allEvents = res.rows;
+	return db
+		.query(
+			`SELECT event_id, title, organiser, description, datetime AT TIME ZONE 'UTC' AS datetime, location, created_at AT TIME ZONE 'UTC' AS created_at FROM events;`
+		)
+		.then((res) => {
+			const allEvents = res.rows;
 
-		return allEvents;
-	});
+			return allEvents;
+		});
 };
 
 exports.fetchFutureEvents = () => {
 	return db
 		.query(
 			`
-	SELECT * FROM events
-	WHERE date + time > NOW()
-	ORDER BY date + time;`
+	SELECT event_id, title, organiser, description, datetime AT TIME ZONE 'UTC' AS datetime, location, created_at AT TIME ZONE 'UTC' AS created_at FROM events
+	WHERE datetime > NOW()
+	ORDER BY datetime;`
 		)
 		.then((res) => {
 			const futureEvents = res.rows;
@@ -47,7 +51,7 @@ exports.fetchEventById = (event_id) => {
 	return db
 		.query(
 			`
-	SELECT * FROM events
+	SELECT event_id, title, organiser, description, datetime AT TIME ZONE 'UTC' AS datetime, location, created_at AT TIME ZONE 'UTC' AS created_at FROM events
 	WHERE event_id = $1;`,
 			[event_id]
 		)
@@ -88,7 +92,7 @@ exports.fetchAttendance = (event_id) => {
 exports.fetchAttending = (user_id) => {
 	return db
 		.query(
-			`SELECT e.* FROM events e
+			`SELECT e.event_id, e.title, e.organiser, e.description, e.datetime AT TIME ZONE 'UTC' AS datetime, e.location, e.created_at AT TIME ZONE 'UTC' AS created_at FROM events e
 			INNER JOIN attendance a
 			ON a.event_id = e.event_id
 			WHERE a.user_id = $1;`,

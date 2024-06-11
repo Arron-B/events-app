@@ -7,6 +7,14 @@ const {
 	getAttendeeNames,
 	getAttendance,
 	getAttending,
+	addNewUser,
+	addNewEvent,
+	addAttendee,
+	patchUserStaff,
+	patchUserName,
+	patchEvent,
+	deleteAttendance,
+	deleteEvent,
 } = require("./controllers/index.js");
 
 const express = require("express");
@@ -17,6 +25,8 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
+
+//////////// Read Endpoints //////////////
 
 app.get("/api/users/:user_id", getUserById);
 
@@ -33,5 +43,27 @@ app.get("/api/events/:event_id", getEventById);
 app.get("/api/events/:event_id/attendees", getAttendeeNames);
 
 app.get("/api/events/:event_id/attendance", getAttendance);
+
+//////////// Create Endpoints //////////////
+
+app.post("/api/users", addNewUser);
+
+app.post("/api/events", addNewEvent);
+
+app.post("/api/events/:event_id/:user_id", addAttendee);
+
+//////////// Update Endpoints //////////////
+
+app.patch("/api/users/:user_id/staff", patchUserStaff);
+
+app.patch("/api/users/:user_id/name", patchUserName);
+
+app.patch("/api/events/:event_id", patchEvent);
+
+//////////// Delete Endpoints //////////////
+
+app.delete("/api/events/:event_id/:user_id", deleteAttendance);
+
+app.delete("/api/events/:event_id", deleteEvent);
 
 module.exports = app;
