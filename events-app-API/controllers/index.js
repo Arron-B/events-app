@@ -22,9 +22,27 @@ const {
 	removeEventFromDb,
 } = require("../models/index.js");
 
-const deleteAttendance = (req, res, next) => {};
+const deleteAttendance = (req, res, next) => {
+	const { event_id, user_id } = req.params;
+	removeAttendanceFromDb(event_id, user_id)
+		.then(() => {
+			res.status(204).send();
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
 
-const deleteEvent = (req, res, next) => {};
+const deleteEvent = (req, res, next) => {
+	const { event_id } = req.params;
+	removeEventFromDb(event_id)
+		.then(() => {
+			res.status(204).send();
+		})
+		.catch((err) => {
+			next(err);
+		});
+};
 
 module.exports = {
 	getAllUsers,

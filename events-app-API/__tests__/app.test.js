@@ -508,7 +508,6 @@ describe("/api/events/:event_id", () => {
 			.send(patchEvent)
 			.then((res) => {
 				const updatedEvent = res.body.event;
-				console.log(updatedEvent);
 				expect(updatedEvent).toEqual(
 					expect.objectContaining({
 						event_id: 15,
@@ -520,6 +519,78 @@ describe("/api/events/:event_id", () => {
 						created_at: expect.any(String),
 					})
 				);
+			});
+	});
+});
+
+describe("DELETE /api/events/:event_id", () => {
+	test("resolves with status 204 and removes attendance entry from database", () => {
+		return db
+			.query(
+				`
+            SELECT * FROM attendance
+            WHERE event_id = 2 AND user_id = 'auth0Id14';
+            `
+			)
+			.then((res) => {
+				expect(res.rowCount).toBe(1);
+				return request(app).delete("/api/events/2/auth0Id14").expect(204);
+			})
+			.then(() => {
+				return db.query(`
+            SELECT * FROM attendance
+            WHERE event_id = 2 AND user_id = 'auth0Id14';
+            `);
+			})
+			.then((res) => {
+				expect(res.rowCount).toBe(0);
+			});
+	});
+});
+
+describe("DELETE /api/events/:event_id", () => {
+	test("resolves with status 204 and removes event from database along with all attendance entries for the event", () => {
+		return db
+			.query(
+				`
+            SELECT * FROM events
+            WHERE event_id = 1;
+            `
+			)
+			.then((res) => {
+				expect(res.rowCount).toBe(1);
+			})
+			.then(() => {
+				return db
+					.query(
+						`
+            SELECT * FROM attendance
+            WHERE event_id = 1;
+            `
+					)
+					.then((res) => {
+						expect(res.rowCount).toBe(3);
+						return request(app).delete("/api/events/1").expect(204);
+					});
+			})
+			.then(() => {
+				return db.query(`
+            SELECT * FROM events
+            WHERE event_id = 1;
+            `);
+			})
+			.then((res) => {
+				expect(res.rowCount).toBe(0);
+				return db
+					.query(
+						`
+            SELECT * FROM attendance
+            WHERE event_id = 1;
+            `
+					)
+					.then((res) => {
+						expect(res.rowCount).toBe(0);
+					});
 			});
 	});
 });

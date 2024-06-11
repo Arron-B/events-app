@@ -80,7 +80,6 @@ exports.updateUser = (user_id, staff, name) => {
 };
 
 exports.updateEvent = (event_id, title, description, datetime, location) => {
-	console.log("in model");
 	return db
 		.query(
 			`

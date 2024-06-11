@@ -51,7 +51,6 @@ exports.patchEvent = (req, res, next) => {
 	const { title, description, datetime, location } = req.body;
 	updateEvent(event_id, title, description, datetime, location)
 		.then((event) => {
-			console.log("back in controller");
 			res.status(200).send({ event });
 		})
 		.catch((err) => next(err));
