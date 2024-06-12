@@ -1,0 +1,225 @@
+{
+	"GET /api": {
+		"description": "Returns a json representation of all the available endpoints of the api"
+	},
+	"GET /api/users": {
+		"description": "Returns an array of all users",
+		"queries": [],
+		"exampleResponse": {
+			"users": [
+				{
+					"user_id": "auth0Id1",
+					"name": "Thomas Anderson",
+					"staff": false,
+					"created_at": "2024-01-01T08:21:39.217Z"
+				},
+				{
+					"user_id": "auth0Id2",
+					"name": "John Davis",
+					"staff": false,
+					"created_at": "2023-12-14T14:50:39.217Z"
+				},
+				{
+					"user_id": "auth0Id3",
+					"name": "Emily Brown",
+					"staff": true,
+					"created_at": "2022-06-20T11:22:01.217Z"
+				}
+			]
+		}
+	},
+	"GET /api/users/:user_id": {
+		"description": "Returns the details of a user matching the user_id",
+		"queries": [],
+		"exampleResponse": {
+			"user": {
+				"user_id": "auth0Id1",
+				"name": "Thomas Anderson",
+				"staff": false,
+				"created_at": "2024-01-01T08:21:39.217Z"
+			}
+		}
+	},
+	"GET /api/events": {
+		"description": "Returns an array containing all events in the database",
+		"queries": [],
+		"exampleResponse": {
+			"events": [
+				{
+					"event_id": 1,
+					"title": "badminton tourney",
+					"organiser": "auth0Id3",
+					"description": "Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
+					"datetime": "2024-06-20T12:00:00.000Z",
+					"location": "404 not found ave, A04 1NF",
+					"created_at": "2024-04-18T14:50:39.217Z"
+				},
+				{
+					"event_id": 2,
+					"title": "Trailblazers",
+					"organiser": "auth0Id5",
+					"description": "Bring your mountain bikes to ride along on some extreme trails!",
+					"datetime": "2024-06-28T10:30:00.000Z",
+					"location": "25 someplace drive, S29 4VU",
+					"created_at": "2024-05-09T13:37:54.217Z"
+				}
+			]
+		}
+	},
+	"GET /api/events/upcoming": {
+		"description": "Returns an array containing all future events in the database",
+		"queries": [],
+		"exampleResponse": {
+			"events": [
+				{
+					"event_id": 1,
+					"title": "badminton tourney",
+					"organiser": "auth0Id3",
+					"description": "Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
+					"datetime": "2024-06-20T12:00:00.000Z",
+					"location": "404 not found ave, A04 1NF",
+					"created_at": "2024-04-18T14:50:39.217Z"
+				},
+				{
+					"event_id": 2,
+					"title": "Trailblazers",
+					"organiser": "auth0Id5",
+					"description": "Bring your mountain bikes to ride along on some extreme trails!",
+					"datetime": "2024-06-28T10:30:00.000Z",
+					"location": "25 someplace drive, S29 4VU",
+					"created_at": "2024-05-09T13:37:54.217Z"
+				}
+			]
+		}
+	},
+	"GET /api/events/:event_id": {
+		"description": "Returns an event matching the event_id",
+		"queries": [],
+		"exampleResponse": {
+			"event": {
+				"event_id": 2,
+				"title": "Trailblazers",
+				"organiser": "auth0Id5",
+				"description": "Bring your mountain bikes to ride along on some extreme trails!",
+				"datetime": "2024-06-28T10:30:00.000Z",
+				"location": "25 someplace drive, S29 4VU",
+				"created_at": "2024-05-09T13:37:54.217Z"
+			}
+		}
+	},
+	"GET /api/events/:event_id/attendees": {
+		"description": "Returns an array of names belonging to each person attending the event matching event_id",
+		"queries": [],
+		"exampleResponse": {
+			"attendees": [
+				{ "name": "Thomas Anderson" },
+				{ "name": "Pietro Maximoff" },
+				{ "name": "Nick Fury" }
+			]
+		}
+	},
+	"GET /api/events/:event_id/attendance": {
+		"description": "Returns the number of people attending the event matching event_id",
+		"queries": [],
+		"exampleResponse": {
+			"attendance": 2
+		}
+	},
+	"GET /api/users/:user_id/attending": {
+		"description": "Returns an array of events being attended by the user matching user_id",
+		"queries": [],
+		"exampleResponse": {
+			"attending": [
+				{
+					"event_id": 1,
+					"title": "badminton tourney",
+					"organiser": "auth0Id3",
+					"description": "Contenders will progress through group stages and the finalists will win a cash prize of £100 for the winner and £50 for the runner up!",
+					"datetime": "2024-06-20T12:00:00.000Z",
+					"location": "404 not found ave, A04 1NF",
+					"created_at": "2024-04-18T14:50:39.217Z"
+				},
+				{
+					"event_id": 6,
+					"title": "Tennis Championship",
+					"organiser": "auth0Id18",
+					"description": "Participate in our tennis championship for a chance to win great prizes.",
+					"datetime": "2024-06-15T09:00:00.000Z",
+					"location": "789 Court Dr, D56 7IJ",
+					"created_at": "2024-04-30T14:55:29.217Z"
+				}
+			]
+		}
+	},
+	"POST /api/users": {
+		"description": "Takes a user_id and name, then creates a new user in the database",
+		"queries": ["user_id", "name"],
+		"exampleResponse": {
+			"user": {
+				"user_id": "auth0Id99",
+				"name": "Mark Grayson",
+				"staff": false,
+				"created_at": "2024-04-01T12:01:11.217Z"
+			}
+		}
+	},
+	"POST /api/events": {
+		"description": "Takes all queries below and creates a new event in the database",
+		"queries": ["title", "organiser", "description", "datetime", "location"],
+		"exampleResponse": {
+			"event": {
+				"event_id": 16,
+				"title": "Powerlifting meet",
+				"organiser": "auth0Id18",
+				"description": "Compete with others in your weight class to pick up the heaviest things!",
+				"datetime": "2024-08-29T23:00:00.000Z",
+				"location": "200 Juicy St, B16 8OI",
+				"created_at": "2024-04-01T12:01:11.217Z"
+			}
+		}
+	},
+	"POST /api/events/:event_id/attending": {
+		"description": "Takes event_id and user_id and submits the user as attending the event",
+		"queries": ["user_id"],
+		"exampleResponse": {
+			"attendance": {
+				"user_id": "auth0Id2",
+				"event_id": 1
+			}
+		}
+	},
+	"PATCH /api/users/:user_id": {
+		"description": "Takes one or more queries and updates the user's information in the database",
+		"queries": ["name, staff"],
+		"exampleResponse": {
+			"user": {
+				"user_id": "auth0Id1",
+				"name": "Thomas Anderson",
+				"staff": true,
+				"created_at": "2023-04-10T14:50:39.217Z"
+			}
+		}
+	},
+	"PATCH /api/events/:event_id": {
+		"description": "Takes one or more queries and updates the event information in the database",
+		"queries": ["title", "organiser", "description", "datetime", "location"],
+		"exampleResponse": {
+			"event": {
+				"event_id": 2,
+				"title": "Trailblazers",
+				"organiser": "auth0Id5",
+				"description": "Bring your mountain bikes to ride along on some extreme trails!",
+				"datetime": "2024-06-28T10:30:00.000Z",
+				"location": "25 someplace drive, S29 4VU",
+				"created_at": "2024-05-09T13:37:54.217Z"
+			}
+		}
+	},
+	"DELETE /api/events/:event_id/attendee": {
+		"description": "Deletes an attendance record matching both the event_id and user_id",
+		"queries": ["user_id"]
+	},
+	"DELETE /api/events/:event_id": {
+		"description": "Deletes the event matching the event_id"
+	}
+}

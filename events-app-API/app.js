@@ -1,5 +1,6 @@
 const express = require("express");
 const {
+	getEndPoints,
 	getAllUsers,
 	getUserById,
 	getAllEvents,
@@ -32,6 +33,8 @@ app.use(cors());
 app.use(express.json());
 
 //////////// Read Endpoints //////////////
+
+app.get("/api", getEndPoints);
 
 app.get("/api/users/:user_id", getUserById);
 
