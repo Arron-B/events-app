@@ -41,6 +41,15 @@ describe("GET /api/users/:user_id", () => {
 				);
 			});
 	});
+
+	test("resolves status 404 and an appropriate message when given a user_id that does not exist in the database", () => {
+		return request(app)
+			.get(`/api/users/auth0Id60`)
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe("No user by this ID");
+			});
+	});
 });
 
 describe("GET /api/users", () => {
@@ -190,6 +199,7 @@ describe("GET /api/events/:event_id", () => {
 				);
 			});
 	});
+
 	test("Resolves with status 200 and sends back correct type and format when event_id is more than 1 digit", () => {
 		return request(app)
 			.get("/api/events/11")
@@ -208,6 +218,19 @@ describe("GET /api/events/:event_id", () => {
 					})
 				);
 			});
+	});
+
+	test("Responds with status 404 and appropriate message when there is no event by the given ID", () => {
+		return request(app)
+			.get("/api/events/89")
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe("No event by this ID");
+			});
+	});
+
+	test("Responds with status 400 when an invalid type is given for ID", () => {
+		return request(app).get("/api/events/one").expect(400);
 	});
 });
 
@@ -230,15 +253,49 @@ describe("GET /api/events/:event_id/attendees", () => {
 			});
 	});
 
-	test("Sends back empty array for an event with no attendees. Works with multiple digit event_ids.", () => {
+	test("Send corrects attendees for an event with a 2 digit ID", () => {
 		return request(app)
-			.get("/api/events/11/attendees")
+			.get("/api/events/10/attendees")
 			.expect(200)
 			.then((res) => {
 				const attendees = res.body.attendees;
 				expect(typeof attendees).toBe("object");
-				expect(attendees.length).toBe(0);
+				expect(attendees.length).toBe(4);
+				expect(attendees).toEqual(
+					expect.arrayContaining([
+						{ name: "Thomas Anderson" },
+						{ name: "Natasha Romanoff" },
+						{ name: "Scott Lang" },
+						{ name: "Barry Allen" },
+					])
+				);
 			});
+	});
+
+	test("Responds with status 404 and appropriate message when there is no event by the given ID", () => {
+		return request(app)
+			.get("/api/events/89/attendees")
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe(
+					"This event has no attendees or does not exist"
+				);
+			});
+	});
+
+	test("Responds with status 404 and appropriate message when the event has no attendees", () => {
+		return request(app)
+			.get("/api/events/11/attendees")
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe(
+					"This event has no attendees or does not exist"
+				);
+			});
+	});
+
+	test("Responds with status 400 when an invalid type is given for ID", () => {
+		return request(app).get("/api/events/one/attendees").expect(400);
 	});
 });
 
@@ -263,6 +320,10 @@ describe("GET /api/events/:event_id/attendance", () => {
 				expect(typeof attendance.attendance).toBe("number");
 				expect(attendance.attendance).toBe(0);
 			});
+	});
+
+	test("Responds with status 400 when an invalid type is given for ID", () => {
+		return request(app).get("/api/events/one/attendance").expect(400);
 	});
 });
 
@@ -339,6 +400,18 @@ describe("GET /api/users/:user_id/attending", () => {
 				);
 			});
 	});
+
+	test("responds with an empty array if the user is not attending any events", () => {
+		return request(app)
+			.get("/api/users/auth0Id11/attending")
+			.expect(200)
+			.then((res) => {
+				const attending = res.body.attending;
+				expect(typeof attending).toBe("object");
+				expect(attending.length).toBe(0);
+				expect(attending).toStrictEqual(expect.arrayContaining([]));
+			});
+	});
 });
 
 describe("POST /api/users", () => {
@@ -346,7 +419,6 @@ describe("POST /api/users", () => {
 		const newUser = {
 			user_id: "auth0Id99",
 			name: "Mark Grayson",
-			staff: false,
 		};
 		return request(app)
 			.post("/api/users")
@@ -362,6 +434,62 @@ describe("POST /api/users", () => {
 						created_at: expect.any(String),
 					})
 				);
+			});
+	});
+
+	test("Responds with status 400 and an appropriate message when name field is empty", () => {
+		const newUser = {
+			user_id: "auth0Id99",
+			name: "",
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("A user cannot be added without a name");
+			});
+	});
+
+	test("Responds with status 400 and an appropriate message when user_id field is empty", () => {
+		const newUser = {
+			user_id: "",
+			name: "Mark Grayson",
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("A user cannot be added without an ID");
+			});
+	});
+
+	test("Responds with status 400 when user_id is not a string", () => {
+		const newUser = {
+			user_id: 9,
+			name: "Mark Grayson",
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("User ID must be a string");
+			});
+	});
+
+	test("Responds with status 409 and an appropriate message if the user already exists", () => {
+		const newUser = {
+			user_id: "auth0Id1",
+			name: "Mark Grayson",
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(409)
+			.then((res) => {
+				expect(res.body.msg).toBe("Conflict: Duplicate Entry");
 			});
 	});
 });
@@ -397,16 +525,77 @@ describe("POST /api/events", () => {
 				);
 			});
 	});
+
+	test("Responds with status 400 and an appropriate message when a field is empty", () => {
+		const newEvent = {
+			title: "",
+			organiser: "auth0Id18",
+			description:
+				"Compete with others in your weight class to pick up the heaviest things!",
+			datetime: "2024-08-29T23:00:00.000Z",
+			location: "200 Juicy St, B16 8OI",
+		};
+		const newEvent2 = {
+			title: "event of some kind",
+			organiser: "auth0Id18",
+			description: "",
+			datetime: "2024-08-29T23:00:00.000Z",
+			location: "200 Juicy St, B16 8OI",
+		};
+		return request(app)
+			.post("/api/events")
+			.send(newEvent)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("Empty or missing field");
+				return request(app)
+					.post("/api/events")
+					.send(newEvent2)
+					.expect(400)
+					.then((res) => {
+						expect(res.body.msg).toBe("Empty or missing field");
+					});
+			});
+	});
+
+	test("Responds with status 400 and an appropriate message when a field is missing", () => {
+		const newEvent = {
+			title: "arfertasdtggd",
+			description:
+				"Compete with others in your weight class to pick up the heaviest things!",
+			datetime: "2024-08-29T23:00:00.000Z",
+			location: "200 Juicy St, B16 8OI",
+		};
+		const newEvent2 = {
+			title: "event of some kind",
+			organiser: "auth0Id18",
+			description: "askejriodj ioajoid joifdj soia",
+			location: "200 Juicy St, B16 8OI",
+		};
+		return request(app)
+			.post("/api/events")
+			.send(newEvent)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("Empty or missing field");
+				return request(app)
+					.post("/api/events")
+					.send(newEvent2)
+					.expect(400)
+					.then((res) => {
+						expect(res.body.msg).toBe("Empty or missing field");
+					});
+			});
+	});
 });
 
-describe("POST /api/events/:event_id/user_id", () => {
+describe("POST /api/events/:event_id/attending", () => {
 	test("resolves with status 201 and returns correct attendance details.", () => {
 		const newAttendance = {
 			user_id: "auth0Id2",
-			event_id: 1,
 		};
 		return request(app)
-			.post("/api/events/1/auth0Id2")
+			.post("/api/events/1")
 			.send(newAttendance)
 			.expect(201)
 			.then((res) => {
@@ -417,6 +606,51 @@ describe("POST /api/events/:event_id/user_id", () => {
 						event_id: 1,
 					})
 				);
+			});
+	});
+
+	test("Responds with status 400 if user_id is missing", () => {
+		const newAttendance = {};
+		return request(app).post("/api/events/1").send(newAttendance).expect(400);
+	});
+
+	test("Responds with status 400 if event_id is not a number", () => {
+		const newAttendance = {
+			user_id: 1,
+		};
+		return request(app).post("/api/events/one").send(newAttendance).expect(400);
+	});
+
+	test("Responds with status 409 if the user is already set to attend the event", () => {
+		const newAttendance = {
+			user_id: "auth0Id2",
+		};
+		return request(app)
+			.post("/api/events/14")
+			.send(newAttendance)
+			.expect(409)
+			.then((res) => {
+				expect(res.body.msg).toBe("Conflict: Duplicate Entry");
+			});
+	});
+
+	test("Responds with status 404 if non-existent event_id or user_id is entered", () => {
+		const newAttendance = {
+			user_id: "auth0Id78",
+		};
+		return request(app)
+			.post("/api/events/1")
+			.send(newAttendance)
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe("A referenced value was not found");
+				return request(app)
+					.post("/api/events/80")
+					.send({ user_id: "auth0Id2" })
+					.expect(404)
+					.then((res) => {
+						expect(res.body.msg).toBe("A referenced value was not found");
+					});
 			});
 	});
 });
@@ -461,9 +695,63 @@ describe("PATCH /api/users/:user_id", () => {
 				);
 			});
 	});
+
+	test("Responds with error 404 when given a user_id that doesn't exist", () => {
+		const patchUser = { name: "Michael Jordan" };
+
+		return request(app)
+			.patch("/api/users/auth0Id94")
+			.expect(404)
+			.send(patchUser)
+			.then((res) => {
+				expect(res.body.msg).toBe("No user for given ID");
+			});
+	});
+
+	test("Responds with error 400 when not given a valid field to update", () => {
+		const patchUser = {
+			invalidField: "The database should work how I want it to!",
+		};
+
+		return request(app)
+			.patch("/api/users/auth0Id2")
+			.expect(400)
+			.send(patchUser)
+			.then((res) => {
+				expect(res.body.msg).toBe("No valid update provided");
+			});
+	});
+
+	test("Responds with error 400 when given an invalid date type for name field", () => {
+		const patchUser = {
+			name: 12,
+		};
+
+		return request(app)
+			.patch("/api/users/auth0Id2")
+			.expect(400)
+			.send(patchUser)
+			.then((res) => {
+				expect(res.body.msg).toBe("Invalid data type for field");
+			});
+	});
+
+	test("Responds with error 400 when given an invalid date type for staff field", () => {
+		const patchUser = {
+			staff: "true",
+		};
+
+		return request(app)
+			.patch("/api/users/auth0Id2")
+			.expect(400)
+			.send(patchUser)
+			.then((res) => {
+				expect(res.body.msg).toBe("Invalid data type for field");
+			});
+	});
 });
 
-describe("/api/events/:event_id", () => {
+describe("PATCH /api/events/:event_id", () => {
 	test("resolves with status 200 and returns an updated event with 1 altered column", () => {
 		const patchEvent = {
 			title: "badminton tourney",
@@ -521,9 +809,90 @@ describe("/api/events/:event_id", () => {
 				);
 			});
 	});
+
+	test("Successfully updates an event when given 1 field", () => {
+		const patchEvent = {
+			title: "Athletics meet",
+		};
+
+		return request(app)
+			.patch("/api/events/15")
+			.expect(200)
+			.send(patchEvent)
+			.then((res) => {
+				const updatedEvent = res.body.event;
+				expect(updatedEvent).toEqual(
+					expect.objectContaining({
+						event_id: 15,
+						title: "Athletics meet",
+						organiser: "auth0Id5",
+						description: "Compete in various track and field events.",
+						datetime: "2024-08-18T09:00:00.000Z",
+						location: "123 Stadium Rd, M78 9AB",
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+
+	////////////////////////////////////////////////////////////////////////////////////
+
+	test("Responds with error 404 when given an event_id that doesn't exist", () => {
+		const patchEvent = { title: "Silent Disco" };
+
+		return request(app)
+			.patch("/api/events/58")
+			.expect(404)
+			.send(patchEvent)
+			.then((res) => {
+				expect(res.body.msg).toBe("No event by given ID");
+			});
+	});
+
+	test("Responds with error 400 when not given a valid field to update", () => {
+		const patchEvent = {
+			invalidField: "The database should work how I want it to!",
+		};
+
+		return request(app)
+			.patch("/api/events/15")
+			.expect(400)
+			.send(patchEvent)
+			.then((res) => {
+				expect(res.body.msg).toBe("No valid fields provided");
+			});
+	});
+
+	test("Responds with error 400 when given an invalid date type for a field", () => {
+		const patchEvent = {
+			title: 20,
+		};
+
+		return request(app)
+			.patch("/api/events/15")
+			.expect(400)
+			.send(patchEvent)
+			.then((res) => {
+				expect(res.body.msg).toBe("Invalid data type submitted");
+			});
+	});
+
+	test("Responds with error 400 when given an event_id that is not a number", () => {
+		const patchEvent = {
+			title: "Fancy dress party",
+		};
+
+		return request(app)
+			.patch("/api/events/five")
+			.expect(400)
+			.send(patchEvent)
+			.then((res) => {
+				expect(res.body.msg).toBe("Invalid data type submitted");
+			});
+	});
 });
 
-describe("DELETE /api/events/:event_id", () => {
+describe("DELETE /api/events/:event_id/attendee", () => {
 	test("resolves with status 204 and removes attendance entry from database", () => {
 		return db
 			.query(
@@ -534,7 +903,11 @@ describe("DELETE /api/events/:event_id", () => {
 			)
 			.then((res) => {
 				expect(res.rowCount).toBe(1);
-				return request(app).delete("/api/events/2/auth0Id14").expect(204);
+				const userId = { user_id: "auth0Id14" };
+				return request(app)
+					.delete("/api/events/2/attendee")
+					.expect(204)
+					.send(userId);
 			})
 			.then(() => {
 				return db.query(`
@@ -545,6 +918,41 @@ describe("DELETE /api/events/:event_id", () => {
 			.then((res) => {
 				expect(res.rowCount).toBe(0);
 			});
+	});
+
+	test("Responds with status 404 when given an event_id that doesn't exist", () => {
+		const userId = { user_id: "auth0Id14" };
+		return request(app)
+			.delete("/api/events/88/attendee")
+			.expect(404)
+			.send(userId);
+	});
+
+	test("Responds with status 404 when given a user_id that doesn't exist", () => {
+		const userId = { user_id: "auth0Id98" };
+		return request(app)
+			.delete("/api/events/1/attendee")
+			.expect(404)
+			.send(userId);
+	});
+
+	test("Responds with status 400 when given no user_id", () => {
+		const userId = {};
+		return request(app)
+			.delete("/api/events/1/attendee")
+			.expect(400)
+			.send(userId)
+			.then((res) => {
+				expect(res.body.msg).toBe("No user_id provided");
+			});
+	});
+
+	test("Responds with status 400 when given event_id is not a number", () => {
+		const userId = { user_id: "auth0Id14" };
+		return request(app)
+			.delete("/api/events/two/attendee")
+			.expect(400)
+			.send(userId);
 	});
 });
 
@@ -592,5 +1000,13 @@ describe("DELETE /api/events/:event_id", () => {
 						expect(res.rowCount).toBe(0);
 					});
 			});
+	});
+
+	test("Responds with status 404 when given an event_id that doesn't exist", () => {
+		return request(app).delete("/api/events/88").expect(404);
+	});
+
+	test("Responds with status 400 when given an event_id that is not a number", () => {
+		return request(app).delete("/api/events/seven").expect(400);
 	});
 });

@@ -41,7 +41,8 @@ const seed = ({ userData, eventData, attendanceData }) => {
 			return db.query(
 				`CREATE TABLE attendance (
                 user_id VARCHAR REFERENCES users(user_id) NOT NULL,
-				event_id INT REFERENCES events(event_id) NOT NULL
+				event_id INT REFERENCES events(event_id) NOT NULL,
+				UNIQUE (user_id, event_id)
             );`
 			);
 		})

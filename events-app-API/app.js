@@ -1,3 +1,4 @@
+const express = require("express");
 const {
 	getAllUsers,
 	getUserById,
@@ -16,7 +17,12 @@ const {
 	deleteEvent,
 } = require("./controllers/index.js");
 
-const express = require("express");
+const {
+	handleCustomErrors,
+	handlePsqlErrors,
+	handle500Errors,
+} = require("./error-handlers/errors.index.js");
+
 const cors = require("cors");
 
 const app = express();
@@ -49,7 +55,7 @@ app.post("/api/users", addNewUser);
 
 app.post("/api/events", addNewEvent);
 
-app.post("/api/events/:event_id/:user_id", addAttendee);
+app.post("/api/events/:event_id", addAttendee);
 
 //////////// Update Endpoints //////////////
 
@@ -59,8 +65,14 @@ app.patch("/api/events/:event_id", patchEvent);
 
 //////////// Delete Endpoints //////////////
 
-app.delete("/api/events/:event_id/:user_id", deleteAttendance);
+app.delete("/api/events/:event_id/attendee", deleteAttendance);
 
 app.delete("/api/events/:event_id", deleteEvent);
+
+//////////// Error Handlers //////////////
+
+app.use(handleCustomErrors);
+
+app.use(handlePsqlErrors);
 
 module.exports = app;
