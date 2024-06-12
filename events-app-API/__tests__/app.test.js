@@ -7,6 +7,19 @@ const testData = require("../db/test-data");
 beforeEach(() => seed(testData));
 afterAll(() => db.end());
 
+describe("GET /api", () => {
+	test("resolves with status code 200 and returns an accurate JSON object detailing all end points", () => {
+		const endPoints = require("../endpoints.json");
+		return request(app)
+			.get("/api")
+			.expect(200)
+			.then((res) => {
+				const endPointResponse = JSON.parse(res.text);
+				expect(endPointResponse.endPoints).toEqual(endPoints);
+			});
+	});
+});
+
 describe("GET /api/users/:user_id", () => {
 	test("resolves status 200 and correct data", () => {
 		return request(app)

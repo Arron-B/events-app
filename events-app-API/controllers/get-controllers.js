@@ -9,6 +9,17 @@ const {
 	fetchAttending,
 } = require("../models/index.js");
 
+exports.getEndPoints = (req, res, next) => {
+	const endPoints = require("../endpoints.json");
+
+	return res
+		.status(200)
+		.send({ endPoints })
+		.catch((err) => {
+			next(err);
+		});
+};
+
 exports.getUserById = (req, res, next) => {
 	const { user_id } = req.params;
 	fetchUserById(user_id)

@@ -1,4 +1,5 @@
 const {
+	getEndPoints,
 	getAllUsers,
 	getUserById,
 	getAllEvents,
@@ -46,6 +47,7 @@ const deleteEvent = (req, res, next) => {
 };
 
 module.exports = {
+	getEndPoints,
 	getAllUsers,
 	getUserById,
 	getAllEvents,
