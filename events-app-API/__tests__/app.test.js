@@ -41,6 +41,15 @@ describe("GET /api/users/:user_id", () => {
 				);
 			});
 	});
+
+	test("resolves status 404 and an appropriate message when given a user_id that does not exist in the database", () => {
+		return request(app)
+			.get(`/api/users/auth0Id60`)
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe("No user by this ID");
+			});
+	});
 });
 
 describe("GET /api/users", () => {
@@ -190,6 +199,7 @@ describe("GET /api/events/:event_id", () => {
 				);
 			});
 	});
+
 	test("Resolves with status 200 and sends back correct type and format when event_id is more than 1 digit", () => {
 		return request(app)
 			.get("/api/events/11")
@@ -208,6 +218,19 @@ describe("GET /api/events/:event_id", () => {
 					})
 				);
 			});
+	});
+
+	test("Responds with status 404 and appropriate message when there is no event by the given ID", () => {
+		return request(app)
+			.get("/api/events/89")
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe("No event by this ID");
+			});
+	});
+
+	test("Responds with status 400 when an invalid type is given for ID", () => {
+		return request(app).get("/api/events/one").expect(400);
 	});
 });
 
@@ -230,15 +253,49 @@ describe("GET /api/events/:event_id/attendees", () => {
 			});
 	});
 
-	test("Sends back empty array for an event with no attendees. Works with multiple digit event_ids.", () => {
+	test("Send corrects attendees for an event with a 2 digit ID", () => {
 		return request(app)
-			.get("/api/events/11/attendees")
+			.get("/api/events/10/attendees")
 			.expect(200)
 			.then((res) => {
 				const attendees = res.body.attendees;
 				expect(typeof attendees).toBe("object");
-				expect(attendees.length).toBe(0);
+				expect(attendees.length).toBe(4);
+				expect(attendees).toEqual(
+					expect.arrayContaining([
+						{ name: "Thomas Anderson" },
+						{ name: "Natasha Romanoff" },
+						{ name: "Scott Lang" },
+						{ name: "Barry Allen" },
+					])
+				);
 			});
+	});
+
+	test("Responds with status 404 and appropriate message when there is no event by the given ID", () => {
+		return request(app)
+			.get("/api/events/89/attendees")
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe(
+					"This event has no attendees or does not exist"
+				);
+			});
+	});
+
+	test("Responds with status 404 and appropriate message when the event has no attendees", () => {
+		return request(app)
+			.get("/api/events/11/attendees")
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe(
+					"This event has no attendees or does not exist"
+				);
+			});
+	});
+
+	test("Responds with status 400 when an invalid type is given for ID", () => {
+		return request(app).get("/api/events/one/attendees").expect(400);
 	});
 });
 
@@ -263,6 +320,10 @@ describe("GET /api/events/:event_id/attendance", () => {
 				expect(typeof attendance.attendance).toBe("number");
 				expect(attendance.attendance).toBe(0);
 			});
+	});
+
+	test("Responds with status 400 when an invalid type is given for ID", () => {
+		return request(app).get("/api/events/one/attendance").expect(400);
 	});
 });
 
@@ -337,6 +398,18 @@ describe("GET /api/users/:user_id/attending", () => {
 						},
 					])
 				);
+			});
+	});
+
+	test("responds with an empty array if the user is not attending any events", () => {
+		return request(app)
+			.get("/api/users/auth0Id11/attending")
+			.expect(200)
+			.then((res) => {
+				const attending = res.body.attending;
+				expect(typeof attending).toBe("object");
+				expect(attending.length).toBe(0);
+				expect(attending).toStrictEqual(expect.arrayContaining([]));
 			});
 	});
 });

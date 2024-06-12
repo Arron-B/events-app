@@ -9,6 +9,12 @@ exports.fetchUserById = (user_id) => {
 		)
 		.then((res) => {
 			const user = res.rows[0];
+			if (!user) {
+				return Promise.reject({
+					status: 404,
+					msg: "No user by this ID",
+				});
+			}
 			return user;
 		});
 };
@@ -57,6 +63,14 @@ exports.fetchEventById = (event_id) => {
 		)
 		.then((res) => {
 			const event = res.rows[0];
+
+			if (!event) {
+				return Promise.reject({
+					status: 404,
+					msg: "No event by this ID",
+				});
+			}
+
 			return event;
 		});
 };
@@ -71,6 +85,13 @@ exports.fetchAttendeeNames = (event_id) => {
 			[event_id]
 		)
 		.then((res) => {
+			if (res.rowCount === 0) {
+				return Promise.reject({
+					status: 404,
+					msg: "This event has no attendees or does not exist",
+				});
+			}
+
 			const attendees = res.rows;
 			return attendees;
 		});
