@@ -463,7 +463,7 @@ describe("PATCH /api/users/:user_id", () => {
 	});
 });
 
-describe("/api/events/:event_id", () => {
+describe("PATCH /api/events/:event_id", () => {
 	test("resolves with status 200 and returns an updated event with 1 altered column", () => {
 		const patchEvent = {
 			title: "badminton tourney",
@@ -523,7 +523,7 @@ describe("/api/events/:event_id", () => {
 	});
 });
 
-describe("DELETE /api/events/:event_id", () => {
+describe("DELETE /api/events/:event_id/:user_id", () => {
 	test("resolves with status 204 and removes attendance entry from database", () => {
 		return db
 			.query(
