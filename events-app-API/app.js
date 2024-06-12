@@ -55,7 +55,7 @@ app.post("/api/users", addNewUser);
 
 app.post("/api/events", addNewEvent);
 
-app.post("/api/events/:event_id/:user_id", addAttendee);
+app.post("/api/events/:event_id", addAttendee);
 
 //////////// Update Endpoints //////////////
 

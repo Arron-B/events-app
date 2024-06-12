@@ -27,7 +27,8 @@ exports.addNewEvent = (req, res, next) => {
 };
 
 exports.addAttendee = (req, res, next) => {
-	const { user_id, event_id } = req.body;
+	const { user_id } = req.body;
+	const { event_id } = req.params;
 
 	insertAttendee(user_id, event_id)
 		.then((attendance) => {

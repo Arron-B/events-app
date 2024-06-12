@@ -1,15 +1,36 @@
 const db = require("../db/connection.js");
 
 exports.insertNewUser = (user_id, name, staff) => {
+	if (!name) {
+		return Promise.reject({
+			status: 400,
+			msg: "A user cannot be added without a name",
+		});
+	}
+
+	if (!user_id) {
+		return Promise.reject({
+			status: 400,
+			msg: "A user cannot be added without an ID",
+		});
+	}
+
+	if (typeof user_id !== "string") {
+		return Promise.reject({
+			status: 400,
+			msg: "User ID must be a string",
+		});
+	}
+
 	return db
 		.query(
 			`INSERT INTO users (user_id, name, staff)
             VALUES ($1, $2, $3)
             RETURNING *;`,
-			[user_id, name, staff]
+			[user_id, name, staff || false]
 		)
 		.then((res) => {
-			const user = res.rows[0];
+			user = res.rows[0];
 			return user;
 		});
 };
@@ -21,6 +42,14 @@ exports.insertNewEvent = (
 	datetime,
 	location
 ) => {
+	if (!title || !organiser || !description || !datetime || !location) {
+		console.log("A field is missing");
+		return Promise.reject({
+			status: 400,
+			msg: "Empty or missing field",
+		});
+	}
+
 	return db
 		.query(
 			`INSERT INTO events (title,

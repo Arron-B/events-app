@@ -419,7 +419,6 @@ describe("POST /api/users", () => {
 		const newUser = {
 			user_id: "auth0Id99",
 			name: "Mark Grayson",
-			staff: false,
 		};
 		return request(app)
 			.post("/api/users")
@@ -435,6 +434,62 @@ describe("POST /api/users", () => {
 						created_at: expect.any(String),
 					})
 				);
+			});
+	});
+
+	test("Responds with status 400 and an appropriate message when name field is empty", () => {
+		const newUser = {
+			user_id: "auth0Id99",
+			name: "",
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("A user cannot be added without a name");
+			});
+	});
+
+	test("Responds with status 400 and an appropriate message when user_id field is empty", () => {
+		const newUser = {
+			user_id: "",
+			name: "Mark Grayson",
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("A user cannot be added without an ID");
+			});
+	});
+
+	test("Responds with status 400 when user_id is not a string", () => {
+		const newUser = {
+			user_id: 9,
+			name: "Mark Grayson",
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("User ID must be a string");
+			});
+	});
+
+	test("Responds with status 409 and an appropriate message if the user already exists", () => {
+		const newUser = {
+			user_id: "auth0Id1",
+			name: "Mark Grayson",
+		};
+		return request(app)
+			.post("/api/users")
+			.send(newUser)
+			.expect(409)
+			.then((res) => {
+				expect(res.body.msg).toBe("Conflict: Duplicate Entry");
 			});
 	});
 });
@@ -470,16 +525,77 @@ describe("POST /api/events", () => {
 				);
 			});
 	});
+
+	test("Responds with status 400 and an appropriate message when a field is empty", () => {
+		const newEvent = {
+			title: "",
+			organiser: "auth0Id18",
+			description:
+				"Compete with others in your weight class to pick up the heaviest things!",
+			datetime: "2024-08-29T23:00:00.000Z",
+			location: "200 Juicy St, B16 8OI",
+		};
+		const newEvent2 = {
+			title: "event of some kind",
+			organiser: "auth0Id18",
+			description: "",
+			datetime: "2024-08-29T23:00:00.000Z",
+			location: "200 Juicy St, B16 8OI",
+		};
+		return request(app)
+			.post("/api/events")
+			.send(newEvent)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("Empty or missing field");
+				return request(app)
+					.post("/api/events")
+					.send(newEvent2)
+					.expect(400)
+					.then((res) => {
+						expect(res.body.msg).toBe("Empty or missing field");
+					});
+			});
+	});
+
+	test("Responds with status 400 and an appropriate message when a field is missing", () => {
+		const newEvent = {
+			title: "arfertasdtggd",
+			description:
+				"Compete with others in your weight class to pick up the heaviest things!",
+			datetime: "2024-08-29T23:00:00.000Z",
+			location: "200 Juicy St, B16 8OI",
+		};
+		const newEvent2 = {
+			title: "event of some kind",
+			organiser: "auth0Id18",
+			description: "askejriodj ioajoid joifdj soia",
+			location: "200 Juicy St, B16 8OI",
+		};
+		return request(app)
+			.post("/api/events")
+			.send(newEvent)
+			.expect(400)
+			.then((res) => {
+				expect(res.body.msg).toBe("Empty or missing field");
+				return request(app)
+					.post("/api/events")
+					.send(newEvent2)
+					.expect(400)
+					.then((res) => {
+						expect(res.body.msg).toBe("Empty or missing field");
+					});
+			});
+	});
 });
 
-describe("POST /api/events/:event_id/user_id", () => {
+describe("POST /api/events/:event_id/attending", () => {
 	test("resolves with status 201 and returns correct attendance details.", () => {
 		const newAttendance = {
 			user_id: "auth0Id2",
-			event_id: 1,
 		};
 		return request(app)
-			.post("/api/events/1/auth0Id2")
+			.post("/api/events/1")
 			.send(newAttendance)
 			.expect(201)
 			.then((res) => {
@@ -490,6 +606,51 @@ describe("POST /api/events/:event_id/user_id", () => {
 						event_id: 1,
 					})
 				);
+			});
+	});
+
+	test("Responds with status 400 if user_id is missing", () => {
+		const newAttendance = {};
+		return request(app).post("/api/events/1").send(newAttendance).expect(400);
+	});
+
+	test("Responds with status 400 if event_id is not a number", () => {
+		const newAttendance = {
+			user_id: 1,
+		};
+		return request(app).post("/api/events/one").send(newAttendance).expect(400);
+	});
+
+	test("Responds with status 409 if the user is already set to attend the event", () => {
+		const newAttendance = {
+			user_id: "auth0Id2",
+		};
+		return request(app)
+			.post("/api/events/14")
+			.send(newAttendance)
+			.expect(409)
+			.then((res) => {
+				expect(res.body.msg).toBe("Conflict: Duplicate Entry");
+			});
+	});
+
+	test("Responds with status 404 if non-existent event_id or user_id is entered", () => {
+		const newAttendance = {
+			user_id: "auth0Id78",
+		};
+		return request(app)
+			.post("/api/events/1")
+			.send(newAttendance)
+			.expect(404)
+			.then((res) => {
+				expect(res.body.msg).toBe("A referenced value was not found");
+				return request(app)
+					.post("/api/events/80")
+					.send({ user_id: "auth0Id2" })
+					.expect(404)
+					.then((res) => {
+						expect(res.body.msg).toBe("A referenced value was not found");
+					});
 			});
 	});
 });
