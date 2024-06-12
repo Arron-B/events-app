@@ -20,13 +20,29 @@ const {
 } = require("./add-models.js");
 
 const removeAttendanceFromDb = (event_id, user_id) => {
-	return db.query(
-		`
+	if (!user_id) {
+		return Promise.reject({
+			status: 400,
+			msg: "No user_id provided",
+		});
+	}
+
+	return db
+		.query(
+			`
 		DELETE FROM attendance
 		WHERE event_id = $1 AND user_id = $2;
         `,
-		[event_id, user_id]
-	);
+			[event_id, user_id]
+		)
+		.then((res) => {
+			if (res.rowCount === 0) {
+				return Promise.reject({
+					status: 404,
+					msg: "Not Found",
+				});
+			}
+		});
 };
 const removeEventFromDb = (event_id) => {
 	return db
@@ -45,6 +61,14 @@ const removeEventFromDb = (event_id) => {
         `,
 				[event_id]
 			);
+		})
+		.then((res) => {
+			if (res.rowCount === 0) {
+				return Promise.reject({
+					status: 404,
+					msg: "Not Found",
+				});
+			}
 		});
 };
 

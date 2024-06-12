@@ -23,7 +23,8 @@ const {
 } = require("../models/index.js");
 
 const deleteAttendance = (req, res, next) => {
-	const { event_id, user_id } = req.params;
+	const { event_id } = req.params;
+	const { user_id } = req.body;
 	removeAttendanceFromDb(event_id, user_id)
 		.then(() => {
 			res.status(204).send();

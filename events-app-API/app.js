@@ -65,7 +65,7 @@ app.patch("/api/events/:event_id", patchEvent);
 
 //////////// Delete Endpoints //////////////
 
-app.delete("/api/events/:event_id/:user_id", deleteAttendance);
+app.delete("/api/events/:event_id/attendee", deleteAttendance);
 
 app.delete("/api/events/:event_id", deleteEvent);
 
@@ -74,7 +74,5 @@ app.delete("/api/events/:event_id", deleteEvent);
 app.use(handleCustomErrors);
 
 app.use(handlePsqlErrors);
-
-// app.use(handle500Errors);
 
 module.exports = app;

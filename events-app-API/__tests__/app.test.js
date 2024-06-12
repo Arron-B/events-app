@@ -751,7 +751,7 @@ describe("PATCH /api/users/:user_id", () => {
 	});
 });
 
-describe.only("PATCH /api/events/:event_id", () => {
+describe("PATCH /api/events/:event_id", () => {
 	test("resolves with status 200 and returns an updated event with 1 altered column", () => {
 		const patchEvent = {
 			title: "badminton tourney",
@@ -892,7 +892,7 @@ describe.only("PATCH /api/events/:event_id", () => {
 	});
 });
 
-describe("DELETE /api/events/:event_id/:user_id", () => {
+describe("DELETE /api/events/:event_id/attendee", () => {
 	test("resolves with status 204 and removes attendance entry from database", () => {
 		return db
 			.query(
@@ -903,7 +903,11 @@ describe("DELETE /api/events/:event_id/:user_id", () => {
 			)
 			.then((res) => {
 				expect(res.rowCount).toBe(1);
-				return request(app).delete("/api/events/2/auth0Id14").expect(204);
+				const userId = { user_id: "auth0Id14" };
+				return request(app)
+					.delete("/api/events/2/attendee")
+					.expect(204)
+					.send(userId);
 			})
 			.then(() => {
 				return db.query(`
@@ -914,6 +918,41 @@ describe("DELETE /api/events/:event_id/:user_id", () => {
 			.then((res) => {
 				expect(res.rowCount).toBe(0);
 			});
+	});
+
+	test("Responds with status 404 when given an event_id that doesn't exist", () => {
+		const userId = { user_id: "auth0Id14" };
+		return request(app)
+			.delete("/api/events/88/attendee")
+			.expect(404)
+			.send(userId);
+	});
+
+	test("Responds with status 404 when given a user_id that doesn't exist", () => {
+		const userId = { user_id: "auth0Id98" };
+		return request(app)
+			.delete("/api/events/1/attendee")
+			.expect(404)
+			.send(userId);
+	});
+
+	test("Responds with status 400 when given no user_id", () => {
+		const userId = {};
+		return request(app)
+			.delete("/api/events/1/attendee")
+			.expect(400)
+			.send(userId)
+			.then((res) => {
+				expect(res.body.msg).toBe("No user_id provided");
+			});
+	});
+
+	test("Responds with status 400 when given event_id is not a number", () => {
+		const userId = { user_id: "auth0Id14" };
+		return request(app)
+			.delete("/api/events/two/attendee")
+			.expect(400)
+			.send(userId);
 	});
 });
 
@@ -961,5 +1000,13 @@ describe("DELETE /api/events/:event_id", () => {
 						expect(res.rowCount).toBe(0);
 					});
 			});
+	});
+
+	test("Responds with status 404 when given an event_id that doesn't exist", () => {
+		return request(app).delete("/api/events/88").expect(404);
+	});
+
+	test("Responds with status 400 when given an event_id that is not a number", () => {
+		return request(app).delete("/api/events/seven").expect(400);
 	});
 });

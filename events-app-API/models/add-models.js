@@ -43,7 +43,6 @@ exports.insertNewEvent = (
 	location
 ) => {
 	if (!title || !organiser || !description || !datetime || !location) {
-		console.log("A field is missing");
 		return Promise.reject({
 			status: 400,
 			msg: "Empty or missing field",
