@@ -695,9 +695,63 @@ describe("PATCH /api/users/:user_id", () => {
 				);
 			});
 	});
+
+	test("Responds with error 404 when given a user_id that doesn't exist", () => {
+		const patchUser = { name: "Michael Jordan" };
+
+		return request(app)
+			.patch("/api/users/auth0Id94")
+			.expect(404)
+			.send(patchUser)
+			.then((res) => {
+				expect(res.body.msg).toBe("No user for given ID");
+			});
+	});
+
+	test("Responds with error 400 when not given a valid field to update", () => {
+		const patchUser = {
+			invalidField: "The database should work how I want it to!",
+		};
+
+		return request(app)
+			.patch("/api/users/auth0Id2")
+			.expect(400)
+			.send(patchUser)
+			.then((res) => {
+				expect(res.body.msg).toBe("No valid update provided");
+			});
+	});
+
+	test("Responds with error 400 when given an invalid date type for name field", () => {
+		const patchUser = {
+			name: 12,
+		};
+
+		return request(app)
+			.patch("/api/users/auth0Id2")
+			.expect(400)
+			.send(patchUser)
+			.then((res) => {
+				expect(res.body.msg).toBe("Invalid data type for field");
+			});
+	});
+
+	test("Responds with error 400 when given an invalid date type for staff field", () => {
+		const patchUser = {
+			staff: "true",
+		};
+
+		return request(app)
+			.patch("/api/users/auth0Id2")
+			.expect(400)
+			.send(patchUser)
+			.then((res) => {
+				expect(res.body.msg).toBe("Invalid data type for field");
+			});
+	});
 });
 
-describe("PATCH /api/events/:event_id", () => {
+describe.only("PATCH /api/events/:event_id", () => {
 	test("resolves with status 200 and returns an updated event with 1 altered column", () => {
 		const patchEvent = {
 			title: "badminton tourney",
@@ -753,6 +807,87 @@ describe("PATCH /api/events/:event_id", () => {
 						created_at: expect.any(String),
 					})
 				);
+			});
+	});
+
+	test("Successfully updates an event when given 1 field", () => {
+		const patchEvent = {
+			title: "Athletics meet",
+		};
+
+		return request(app)
+			.patch("/api/events/15")
+			.expect(200)
+			.send(patchEvent)
+			.then((res) => {
+				const updatedEvent = res.body.event;
+				expect(updatedEvent).toEqual(
+					expect.objectContaining({
+						event_id: 15,
+						title: "Athletics meet",
+						organiser: "auth0Id5",
+						description: "Compete in various track and field events.",
+						datetime: "2024-08-18T09:00:00.000Z",
+						location: "123 Stadium Rd, M78 9AB",
+						created_at: expect.any(String),
+					})
+				);
+			});
+	});
+
+	////////////////////////////////////////////////////////////////////////////////////
+
+	test("Responds with error 404 when given an event_id that doesn't exist", () => {
+		const patchEvent = { title: "Silent Disco" };
+
+		return request(app)
+			.patch("/api/events/58")
+			.expect(404)
+			.send(patchEvent)
+			.then((res) => {
+				expect(res.body.msg).toBe("No event by given ID");
+			});
+	});
+
+	test("Responds with error 400 when not given a valid field to update", () => {
+		const patchEvent = {
+			invalidField: "The database should work how I want it to!",
+		};
+
+		return request(app)
+			.patch("/api/events/15")
+			.expect(400)
+			.send(patchEvent)
+			.then((res) => {
+				expect(res.body.msg).toBe("No valid fields provided");
+			});
+	});
+
+	test("Responds with error 400 when given an invalid date type for a field", () => {
+		const patchEvent = {
+			title: 20,
+		};
+
+		return request(app)
+			.patch("/api/events/15")
+			.expect(400)
+			.send(patchEvent)
+			.then((res) => {
+				expect(res.body.msg).toBe("Invalid data type submitted");
+			});
+	});
+
+	test("Responds with error 400 when given an event_id that is not a number", () => {
+		const patchEvent = {
+			title: "Fancy dress party",
+		};
+
+		return request(app)
+			.patch("/api/events/five")
+			.expect(400)
+			.send(patchEvent)
+			.then((res) => {
+				expect(res.body.msg).toBe("Invalid data type submitted");
 			});
 	});
 });

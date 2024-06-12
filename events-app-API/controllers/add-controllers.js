@@ -49,8 +49,8 @@ exports.patchUser = (req, res, next) => {
 
 exports.patchEvent = (req, res, next) => {
 	const { event_id } = req.params;
-	const { title, description, datetime, location } = req.body;
-	updateEvent(event_id, title, description, datetime, location)
+	const updates = req.body;
+	updateEvent(event_id, updates)
 		.then((event) => {
 			res.status(200).send({ event });
 		})
