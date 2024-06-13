@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 import { fetchUpcomingEvents } from "../api";
+
 import {
-	Menu,
-	MenuButton,
-	MenuItem,
-	MenuItems,
-	Transition,
-} from "@headlessui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	PlusIcon,
+} from "@heroicons/react/20/solid";
 import { useAuth0 } from "@auth0/auth0-react";
 import Dropdown from "./Dropdown";
 import PageButtons from "./PageButtons";
@@ -17,19 +14,18 @@ function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 
-export default function Calendar() {
-	const { user, isAuthenticated, isLoading } = useAuth0();
+export default function Calendar({ user }) {
+	const { isAuthenticated, isLoading } = useAuth0();
 	const [page, setPage] = useState(1);
 	const [upcomingEvents, setUpcomingEvents] = useState([]);
 
 	useEffect(() => {
 		fetchUpcomingEvents()
-			.then((res) => {
-				setUpcomingEvents(res.data.events);
+			.then((eventsParsed) => {
+				setUpcomingEvents(eventsParsed);
 			})
 			.catch((err) => {
 				console.log(err);
-				setErrMsg(err.response.data.msg);
 			});
 	}, []);
 
@@ -79,157 +75,115 @@ export default function Calendar() {
 	];
 
 	return isAuthenticated ? (
-		<div className="container md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200">
-			<div className="calendar md:pr-14">
-				<div className="flex items-center">
-					<h2 className="flex-auto text-sm font-semibold text-gray-900">
-						January 2022
-					</h2>
-					<button
-						type="button"
-						className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-					>
-						<span className="sr-only">Previous month</span>
-						<ChevronLeftIcon
-							className="h-5 w-5"
-							aria-hidden="true"
-						/>
-					</button>
-					<button
-						type="button"
-						className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
-					>
-						<span className="sr-only">Next month</span>
-						<ChevronRightIcon
-							className="h-5 w-5"
-							aria-hidden="true"
-						/>
-					</button>
-				</div>
-				<div className="mt-10 grid grid-cols-7 text-center text-xs leading-6 text-gray-500">
-					<div>M</div>
-					<div>T</div>
-					<div>W</div>
-					<div>T</div>
-					<div>F</div>
-					<div>S</div>
-					<div>S</div>
-				</div>
-				<div className="mt-2 grid grid-cols-7 text-sm">
-					{days.map((day, dayIdx) => (
-						<div
-							key={day.date}
-							className={classNames(
-								dayIdx > 6 && "border-t border-gray-200",
-								"py-2"
-							)}
+		<>
+			<div className="container md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
+				<div className="calendar md:pr-14">
+					<div className="flex items-center">
+						<h2 className="flex-auto text-sm font-semibold text-gray-900">
+							January 2022
+						</h2>
+						<button
+							type="button"
+							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
 						>
-							<button
-								type="button"
+							<span className="sr-only">Previous month</span>
+							<ChevronLeftIcon
+								className="h-5 w-5"
+								aria-hidden="true"
+							/>
+						</button>
+						<button
+							type="button"
+							className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+						>
+							<span className="sr-only">Next month</span>
+							<ChevronRightIcon
+								className="h-5 w-5"
+								aria-hidden="true"
+							/>
+						</button>
+					</div>
+					<div className="mt-10 grid grid-cols-7 text-center text-xs leading-6 text-gray-500">
+						<div>M</div>
+						<div>T</div>
+						<div>W</div>
+						<div>T</div>
+						<div>F</div>
+						<div>S</div>
+						<div>S</div>
+					</div>
+					<div className="mt-2 grid grid-cols-7 text-sm">
+						{days.map((day, dayIdx) => (
+							<div
+								key={day.date}
 								className={classNames(
-									day.isSelected && "text-white",
-									!day.isSelected && day.isToday && "text-indigo-600",
-									!day.isSelected &&
-										!day.isToday &&
-										day.isCurrentMonth &&
-										"text-gray-900",
-									!day.isSelected &&
-										!day.isToday &&
-										!day.isCurrentMonth &&
-										"text-gray-400",
-									day.isSelected && day.isToday && "bg-indigo-600",
-									day.isSelected && !day.isToday && "bg-gray-900",
-									!day.isSelected && "hover:bg-gray-200",
-									(day.isSelected || day.isToday) && "font-semibold",
-									"mx-auto flex h-8 w-8 items-center justify-center rounded-full"
+									dayIdx > 6 && "border-t border-gray-200",
+									"py-2"
 								)}
 							>
-								<time dateTime={day.date}>
-									{day.date.split("-").pop().replace(/^0/, "")}
-								</time>
-							</button>
-						</div>
-					))}
-				</div>
-			</div>
-
-			<section className="event-display max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
-				<Dropdown />
-				<ol className="mt-10 max-h-80 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
-					{upcomingEvents.map((event, i) => (
-						<li
-							key={`upcoming${i}`}
-							className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
-						>
-							<div className="flex-auto">
-								<p className="text-gray-900">{event.title}</p>
-								<p className="mt-0.5">
-									<time dateTime={""}>{}</time> - <time dateTime={""}>{}</time>
-								</p>
-							</div>
-							<Menu
-								as="div"
-								className="relative opacity-0 focus-within:opacity-100 group-hover:opacity-100"
-							>
-								<div>
-									<MenuButton className="-m-2 flex items-center rounded-full p-1.5 text-gray-500 hover:text-gray-600">
-										<span className="sr-only">Open options</span>
-										<EllipsisVerticalIcon
-											className="h-6 w-6"
-											aria-hidden="true"
-										/>
-									</MenuButton>
-								</div>
-
-								<Transition
-									enter="transition ease-out duration-100"
-									enterFrom="transform opacity-0 scale-95"
-									enterTo="transform opacity-100 scale-100"
-									leave="transition ease-in duration-75"
-									leaveFrom="transform opacity-100 scale-100"
-									leaveTo="transform opacity-0 scale-95"
+								<button
+									type="button"
+									className={classNames(
+										day.isSelected && "text-white",
+										!day.isSelected && day.isToday && "text-indigo-600",
+										!day.isSelected &&
+											!day.isToday &&
+											day.isCurrentMonth &&
+											"text-gray-900",
+										!day.isSelected &&
+											!day.isToday &&
+											!day.isCurrentMonth &&
+											"text-gray-400",
+										day.isSelected && day.isToday && "bg-indigo-600",
+										day.isSelected && !day.isToday && "bg-gray-900",
+										!day.isSelected && "hover:bg-gray-200",
+										(day.isSelected || day.isToday) && "font-semibold",
+										"mx-auto flex h-8 w-8 items-center justify-center rounded-full"
+									)}
 								>
-									<MenuItems className="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-										<div className="py-1">
-											<MenuItem>
-												{({ focus }) => (
-													<a
-														href="#"
-														className={classNames(
-															focus
-																? "bg-gray-100 text-gray-900"
-																: "text-gray-700",
-															"block px-4 py-2 text-sm"
-														)}
-													>
-														Edit
-													</a>
-												)}
-											</MenuItem>
-											<MenuItem>
-												{({ focus }) => (
-													<a
-														href="#"
-														className={classNames(
-															focus
-																? "bg-gray-100 text-gray-900"
-																: "text-gray-700",
-															"block px-4 py-2 text-sm"
-														)}
-													>
-														Cancel
-													</a>
-												)}
-											</MenuItem>
-										</div>
-									</MenuItems>
-								</Transition>
-							</Menu>
-						</li>
-					))}
-				</ol>
-				<PageButtons />
-			</section>
-		</div>
+									<time dateTime={day.date}>
+										{day.date.split("-").pop().replace(/^0/, "")}
+									</time>
+								</button>
+							</div>
+						))}
+					</div>
+				</div>
+
+				<section className="event-display max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
+					<Dropdown />
+					<ol className="mt-10 max-h-80 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
+						{upcomingEvents.map((event, i) => (
+							<li
+								key={`upcoming${i}`}
+								className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
+							>
+								<div className="flex-auto">
+									<p className="text-gray-900">{event.title}</p>
+									<p className="mt-0.5">
+										<time dateTime={""}>{event.datetime.toDateString()}</time>{" "}
+										{" at "}
+										<time dateTime={""}>
+											{event.datetime.toTimeString().slice(0, 9)}
+										</time>
+									</p>
+								</div>
+							</li>
+						))}
+					</ol>
+					<PageButtons />
+				</section>
+			</div>
+			<button
+				type="button"
+				className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+			>
+				<PlusIcon
+					className="-ml-0.5 h-5 w-5"
+					aria-hidden="true"
+				/>
+				New Event
+			</button>
+		</>
 	) : null;
 }
