@@ -1,3 +1,5 @@
+import { useState, useEffect } from "react";
+import { fetchUpcomingEvents } from "../api";
 import {
 	Menu,
 	MenuButton,
@@ -8,7 +10,8 @@ import {
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useAuth0 } from "@auth0/auth0-react";
-import LogoutButton from "./LogoutButton";
+import Dropdown from "./Dropdown";
+import PageButtons from "./PageButtons";
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
@@ -16,8 +19,19 @@ function classNames(...classes) {
 
 export default function Calendar() {
 	const { user, isAuthenticated, isLoading } = useAuth0();
+	const [page, setPage] = useState(1);
+	const [upcomingEvents, setUpcomingEvents] = useState([]);
 
-	const upcoming = isAuthenticated ? [] : [];
+	useEffect(() => {
+		fetchUpcomingEvents()
+			.then((res) => {
+				setUpcomingEvents(res.data.events);
+			})
+			.catch((err) => {
+				console.log(err);
+				setErrMsg(err.response.data.msg);
+			});
+	}, []);
 
 	const days = [
 		{ date: "2021-12-27" },
@@ -64,9 +78,9 @@ export default function Calendar() {
 		{ date: "2022-02-06" },
 	];
 
-	return (
-		<div className="md:grid md:grid-cols-2 md:divide-x md:divide-gray-200">
-			<div className="md:pr-14">
+	return isAuthenticated ? (
+		<div className="container md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200">
+			<div className="calendar md:pr-14">
 				<div className="flex items-center">
 					<h2 className="flex-auto text-sm font-semibold text-gray-900">
 						January 2022
@@ -101,7 +115,7 @@ export default function Calendar() {
 					<div>S</div>
 					<div>S</div>
 				</div>
-				<div className="calendar mt-2 grid grid-cols-7 text-sm">
+				<div className="mt-2 grid grid-cols-7 text-sm">
 					{days.map((day, dayIdx) => (
 						<div
 							key={day.date}
@@ -138,26 +152,19 @@ export default function Calendar() {
 					))}
 				</div>
 			</div>
-			<section className="event-display mt-12 md:mt-0 md:pl-14">
-				<h2 className="text-base font-semibold leading-6 text-gray-900">
-					Schedule for <time dateTime="2022-01-21">January 21, 2022</time>
-				</h2>
-				<ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-					{upcoming.map((event) => (
+
+			<section className="event-display max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
+				<Dropdown />
+				<ol className="mt-10 max-h-80 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
+					{upcomingEvents.map((event, i) => (
 						<li
-							key={meeting.id}
+							key={`upcoming${i}`}
 							className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
 						>
-							<img
-								src={meeting.imageUrl}
-								alt=""
-								className="h-10 w-10 flex-none rounded-full"
-							/>
 							<div className="flex-auto">
-								<p className="text-gray-900">{meeting.name}</p>
+								<p className="text-gray-900">{event.title}</p>
 								<p className="mt-0.5">
-									<time dateTime={meeting.startDatetime}>{meeting.start}</time>{" "}
-									- <time dateTime={meeting.endDatetime}>{meeting.end}</time>
+									<time dateTime={""}>{}</time> - <time dateTime={""}>{}</time>
 								</p>
 							</div>
 							<Menu
@@ -221,8 +228,8 @@ export default function Calendar() {
 						</li>
 					))}
 				</ol>
+				<PageButtons />
 			</section>
-			<LogoutButton></LogoutButton>
 		</div>
-	);
+	) : null;
 }
