@@ -2,7 +2,7 @@ import { HomeIcon } from "@heroicons/react/20/solid";
 import { useAuth0 } from "@auth0/auth0-react";
 
 export default function Nav({ user }) {
-	return (
+	return user ? (
 		<nav
 			className="flex w-full justify-around"
 			aria-label="Breadcrumb"
@@ -45,5 +45,5 @@ export default function Nav({ user }) {
 				</div>
 			</a>
 		</nav>
-	);
+	) : null;
 }
