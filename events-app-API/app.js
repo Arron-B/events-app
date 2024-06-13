@@ -3,6 +3,7 @@ const {
 	getEndPoints,
 	getAllUsers,
 	getUserById,
+	getStaffVerification,
 	getAllEvents,
 	getFutureEvents,
 	getEventById,
@@ -37,6 +38,8 @@ app.use(express.json());
 app.get("/api", getEndPoints);
 
 app.get("/api/users/:user_id", getUserById);
+
+app.get("/api/staffverify", getStaffVerification);
 
 app.get("/api/users", getAllUsers);
 

@@ -65,6 +65,30 @@ describe("GET /api/users/:user_id", () => {
 	});
 });
 
+describe("GET /api/staffverify", () => {
+	test("resolves status 200 and true if password matches", () => {
+		const staffPass = { password: "1234" };
+		return request(app)
+			.get("/api/staffverify")
+			.expect(200)
+			.send(staffPass)
+			.then((res) => {
+				expect(res.body.match).toBe(true);
+			});
+	});
+
+	test("resolves status 400 and false if the password does not match", () => {
+		const staffPass = { password: "4321" };
+		return request(app)
+			.get("/api/staffverify")
+			.expect(400)
+			.send(staffPass)
+			.then((res) => {
+				expect(res.body.match).toBe(false);
+			});
+	});
+});
+
 describe("GET /api/users", () => {
 	test("resolves status 200 and correct amount of users including first and last user", () => {
 		return request(app)
