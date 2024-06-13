@@ -8,3 +8,10 @@ export function fetchUserById(userId) {
 		return res;
 	});
 }
+
+export function fetchUpcomingEvents() {
+	return axios.get(`${domainName}/api/events/upcoming`).then((res) => {
+		console.log(res.data.events);
+		return res;
+	});
+}

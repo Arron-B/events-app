@@ -6,6 +6,7 @@ export default function LogoutButton() {
 
 	return (
 		<button
+			className="mx-auto mt-10 col-span-2"
 			onClick={() =>
 				logout({ logoutParams: { returnTo: "http://localhost:5173/" } })
 			}
