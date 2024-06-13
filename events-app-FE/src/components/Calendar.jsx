@@ -5,6 +5,7 @@ import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	PlusIcon,
+	ClipboardDocumentCheckIcon,
 } from "@heroicons/react/20/solid";
 import { useAuth0 } from "@auth0/auth0-react";
 import Dropdown from "./Dropdown";
@@ -74,7 +75,7 @@ export default function Calendar({ user }) {
 		{ date: "2022-02-06" },
 	];
 
-	return isAuthenticated ? (
+	return user ? (
 		<>
 			<div className="container md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
 				<div className="calendar md:pr-14">
@@ -178,11 +179,18 @@ export default function Calendar({ user }) {
 				type="button"
 				className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
 			>
-				<PlusIcon
-					className="-ml-0.5 h-5 w-5"
-					aria-hidden="true"
-				/>
-				New Event
+				{user.staff ? (
+					<PlusIcon
+						className="-ml-0.5 h-5 w-5"
+						aria-hidden="true"
+					/>
+				) : (
+					<ClipboardDocumentCheckIcon
+						className="-ml-0.5 h-5 w-5"
+						aria-hidden="true"
+					/>
+				)}
+				{user.staff ? "New Event" : "Staff Verify"}
 			</button>
 		</>
 	) : null;
