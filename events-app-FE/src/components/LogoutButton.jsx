@@ -7,7 +7,7 @@ export default function LogoutButton() {
 	return (
 		<button
 			onClick={() =>
-				logout({ logoutParams: { returnTo: "http://localhost:5173" } })
+				logout({ logoutParams: { returnTo: "http://localhost:5173/" } })
 			}
 		>
 			Log Out

@@ -17,20 +17,7 @@ function classNames(...classes) {
 export default function Calendar() {
 	const { user, isAuthenticated, isLoading } = useAuth0();
 
-	const meetings = isAuthenticated
-		? [
-				{
-					id: 1,
-					name: user.name,
-					imageUrl: user.picture,
-					start: "1:00 PM",
-					startDatetime: "2022-01-21T13:00",
-					end: "2:30 PM",
-					endDatetime: "2022-01-21T14:30",
-				},
-				// More meetings...
-		  ]
-		: [];
+	const upcoming = isAuthenticated ? [] : [];
 
 	const days = [
 		{ date: "2021-12-27" },
@@ -114,7 +101,7 @@ export default function Calendar() {
 					<div>S</div>
 					<div>S</div>
 				</div>
-				<div className="mt-2 grid grid-cols-7 text-sm">
+				<div className="calendar mt-2 grid grid-cols-7 text-sm">
 					{days.map((day, dayIdx) => (
 						<div
 							key={day.date}
@@ -151,12 +138,12 @@ export default function Calendar() {
 					))}
 				</div>
 			</div>
-			<section className="mt-12 md:mt-0 md:pl-14">
+			<section className="event-display mt-12 md:mt-0 md:pl-14">
 				<h2 className="text-base font-semibold leading-6 text-gray-900">
 					Schedule for <time dateTime="2022-01-21">January 21, 2022</time>
 				</h2>
 				<ol className="mt-4 space-y-1 text-sm leading-6 text-gray-500">
-					{meetings.map((meeting) => (
+					{upcoming.map((event) => (
 						<li
 							key={meeting.id}
 							className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
