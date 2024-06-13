@@ -1,6 +1,13 @@
 {
 	"GET /api": {
-		"description": "Returns a json representation of all the available endpoints of the api"
+		"description": "Returns a json representation of all the available endpoints of the api (this is what you are reading now)"
+	},
+	"GET /api/staffverify": {
+		"description": "Takes a password query and checks for a match against the API STAFF_PASS environment variable",
+		"queries": ["password"],
+		"exampleResponse": {
+			"match": "true"
+		}
 	},
 	"GET /api/users": {
 		"description": "Returns an array of all users",

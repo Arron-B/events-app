@@ -31,6 +31,12 @@ exports.getUserById = (req, res, next) => {
 		});
 };
 
+exports.getStaffVerification = (req, res, next) => {
+	if (req.body.password == process.env.STAFF_PASS) {
+		return res.status(200).send({ match: true });
+	} else return res.status(400).send({ match: false });
+};
+
 exports.getAllUsers = (req, res, next) => {
 	fetchAllUsers()
 		.then((users) => {
