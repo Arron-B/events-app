@@ -6,6 +6,7 @@ import Calendar from "./components/Calendar.jsx";
 import LogoutButton from "./components/LogoutButton.jsx";
 import Nav from "./components/Nav.jsx";
 import { fetchUserById, postNewUser } from "./api.js";
+import Loading from "./components/Loading.jsx";
 
 function App() {
 	const { loginWithRedirect, isAuthenticated, isLoading, user } = useAuth0();
@@ -41,13 +42,15 @@ function App() {
 		}
 	}, [isAuthenticated]);
 
-	return (
+	return userData ? (
 		<>
 			<Nav user={userData} />
 			<Calendar user={userData} />
 
 			<Outlet />
 		</>
+	) : (
+		<Loading />
 	);
 }
 
