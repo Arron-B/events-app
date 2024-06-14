@@ -12,7 +12,11 @@ function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 
-export default function Example() {
+export default function Dropdown({
+	setDisplay,
+	upcomingEvents,
+	attendingEvents,
+}) {
 	const [selection, setSelection] = useState("Upcoming Events");
 
 	return (
@@ -45,6 +49,7 @@ export default function Example() {
 								<option
 									onClick={() => {
 										setSelection("Upcoming Events");
+										setDisplay([...upcomingEvents]);
 									}}
 									className={classNames(
 										focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
@@ -61,6 +66,7 @@ export default function Example() {
 								<a
 									onClick={() => {
 										setSelection("Attending");
+										setDisplay([...attendingEvents]);
 									}}
 									className={classNames(
 										focus ? "bg-gray-100 text-gray-900" : "text-gray-700",

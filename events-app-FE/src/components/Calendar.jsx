@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-import { fetchUpcomingEvents } from "../api";
+import { fetchUpcomingEvents, fetchAttending } from "../api";
+import LogoutButton from "./LogoutButton";
 
 import {
 	ChevronLeftIcon,
 	ChevronRightIcon,
 	PlusIcon,
+	ClipboardDocumentCheckIcon,
 } from "@heroicons/react/20/solid";
 import { useAuth0 } from "@auth0/auth0-react";
 import Dropdown from "./Dropdown";
@@ -16,18 +18,32 @@ function classNames(...classes) {
 
 export default function Calendar({ user }) {
 	const { isAuthenticated, isLoading } = useAuth0();
+	const [display, setDisplay] = useState([]);
 	const [page, setPage] = useState(1);
 	const [upcomingEvents, setUpcomingEvents] = useState([]);
+	const [attendingEvents, setAttendingEvents] = useState([]);
+	const [myEvents, setMyEvents] = useState([]);
 
 	useEffect(() => {
 		fetchUpcomingEvents()
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
+				setDisplay(eventsParsed);
 			})
 			.catch((err) => {
 				console.log(err);
 			});
 	}, []);
+
+	useEffect(() => {
+		fetchAttending(user.user_id)
+			.then((eventsParsed) => {
+				setAttendingEvents(eventsParsed);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}, [user]);
 
 	const days = [
 		{ date: "2021-12-27" },
@@ -74,7 +90,7 @@ export default function Calendar({ user }) {
 		{ date: "2022-02-06" },
 	];
 
-	return isAuthenticated ? (
+	return user ? (
 		<>
 			<div className="container md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
 				<div className="calendar md:pr-14">
@@ -151,39 +167,57 @@ export default function Calendar({ user }) {
 				</div>
 
 				<section className="event-display max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
-					<Dropdown />
+					<Dropdown
+						setDisplay={setDisplay}
+						upcomingEvents={upcomingEvents}
+						attendingEvents={attendingEvents}
+					/>
 					<ol className="mt-10 max-h-80 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
-						{upcomingEvents.map((event, i) => (
-							<li
-								key={`upcoming${i}`}
-								className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
-							>
-								<div className="flex-auto">
-									<p className="text-gray-900">{event.title}</p>
-									<p className="mt-0.5">
-										<time dateTime={""}>{event.datetime.toDateString()}</time>{" "}
-										{" at "}
-										<time dateTime={""}>
-											{event.datetime.toTimeString().slice(0, 9)}
-										</time>
-									</p>
-								</div>
-							</li>
-						))}
+						{display.length > 0
+							? display.map((event, i) => (
+									<li
+										key={`upcoming${i}`}
+										className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
+									>
+										<div className="flex-auto">
+											<p className="text-gray-900">{event.title}</p>
+											<p className="mt-0.5">
+												<time dateTime={""}>
+													{event.datetime.toDateString()}
+												</time>{" "}
+												{" at "}
+												<time dateTime={""}>
+													{event.datetime.toTimeString().slice(0, 9)}
+												</time>
+											</p>
+										</div>
+									</li>
+							  ))
+							: null}
 					</ol>
 					<PageButtons />
 				</section>
 			</div>
-			<button
-				type="button"
-				className="relative inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-			>
-				<PlusIcon
-					className="-ml-0.5 h-5 w-5"
-					aria-hidden="true"
-				/>
-				New Event
-			</button>
+			<div className="flex justify-around w-full">
+				<button
+					type="button"
+					className="relative w-[20%] inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+				>
+					{user.staff ? (
+						<PlusIcon
+							className="-ml-0.5 h-5 w-5"
+							aria-hidden="true"
+						/>
+					) : (
+						<ClipboardDocumentCheckIcon
+							className="-ml-0.5 h-5 w-5"
+							aria-hidden="true"
+						/>
+					)}
+					{user.staff ? "New Event" : "Staff Verify"}
+				</button>
+				<LogoutButton />
+			</div>
 		</>
 	) : null;
 }

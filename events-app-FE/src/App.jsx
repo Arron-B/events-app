@@ -46,7 +46,6 @@ function App() {
 			<Nav user={userData} />
 			<Calendar user={userData} />
 
-			<LogoutButton />
 			<Outlet />
 		</>
 	);
