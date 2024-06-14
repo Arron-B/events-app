@@ -39,7 +39,7 @@ app.get("/api", getEndPoints);
 
 app.get("/api/users/:user_id", getUserById);
 
-app.get("/api/staffverify", getStaffVerification);
+app.post("/api/staffverify", getStaffVerification);
 
 app.get("/api/users", getAllUsers);
 
