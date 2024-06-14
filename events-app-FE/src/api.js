@@ -62,3 +62,21 @@ export function fetchAttendance(eventId) {
 			return res;
 		});
 }
+
+export function staffVerify(password) {
+	return axios
+		.post(`${domainName}/api/staffverify`, { password: password })
+		.then((res) => {
+			return res;
+		});
+}
+
+export function setAsStaff(userId) {
+	return axios
+		.patch(`${domainName}/api/users/${userId}`, {
+			staff: true,
+		})
+		.then((res) => {
+			return res;
+		});
+}

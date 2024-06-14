@@ -30,7 +30,7 @@ function App() {
 				})
 				.catch((err) => {
 					console.log(err);
-					postNewUser(user, user.name)
+					postNewUser(user.sub, user.name)
 						.then((res) => {
 							combineUserData(user, res.data.user);
 						})
@@ -45,7 +45,7 @@ function App() {
 		<UserProvider value={userData}>
 			<Nav />
 
-			<Outlet />
+			<Outlet setUser={setUserData} />
 		</UserProvider>
 	) : (
 		<Loading />
