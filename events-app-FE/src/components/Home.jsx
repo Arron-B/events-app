@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useUser } from "../UserContext.jsx";
-import { fetchUpcomingEvents, fetchAttending } from "../api.js";
+import { fetchUpcomingEvents, fetchAttending, staffVerify } from "../api.js";
 import LogoutButton from "./LogoutButton.jsx";
+import StaffVerifyModal from "./StaffVerifyModal.jsx";
 import Event from "./Event.jsx";
 
 import {
@@ -19,8 +20,9 @@ function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 
-export default function Home() {
+export default function Home({ setUser }) {
 	let [searchParams, setSearchParams] = useSearchParams();
+	const [open, setOpen] = useState(false); //modal controls
 	const { isAuthenticated, isLoading } = useAuth0();
 	const [display, setDisplay] = useState([]);
 	const [prevDisplay, setPrevDisplay] = useState([]);
@@ -101,6 +103,11 @@ export default function Home() {
 
 	return user ? (
 		<>
+			<StaffVerifyModal
+				open={open}
+				setOpen={setOpen}
+				setUser={setUser}
+			/>
 			<div className="container h-full md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
 				<div className="calendar my-auto md:pr-14">
 					<div className="flex items-center">
@@ -226,6 +233,12 @@ export default function Home() {
 				<button
 					type="button"
 					className="relative w-1/3 md:w-[20%] inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+					onClick={(e) => {
+						e.preventDefault();
+						if (!user.staff) {
+							setOpen(true);
+						}
+					}}
 				>
 					{user.staff ? (
 						<PlusIcon
