@@ -65,24 +65,24 @@ describe("GET /api/users/:user_id", () => {
 	});
 });
 
-describe("GET /api/staffverify", () => {
+describe("POST /api/staffverify", () => {
 	test("resolves status 200 and true if password matches", () => {
 		const staffPass = { password: "1234" };
 		return request(app)
-			.get("/api/staffverify")
-			.expect(200)
+			.post("/api/staffverify")
 			.send(staffPass)
+			.expect(200)
 			.then((res) => {
 				expect(res.body.match).toBe(true);
 			});
 	});
 
-	test("resolves status 400 and false if the password does not match", () => {
+	test("Responds status 400 and appropriate message if the password is incorrect", () => {
 		const staffPass = { password: "4321" };
 		return request(app)
-			.get("/api/staffverify")
-			.expect(400)
+			.post("/api/staffverify")
 			.send(staffPass)
+			.expect(400)
 			.then((res) => {
 				expect(res.body.match).toBe(false);
 			});
