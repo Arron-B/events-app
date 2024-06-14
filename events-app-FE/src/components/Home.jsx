@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
-import { fetchUpcomingEvents, fetchAttending } from "../api";
-import LogoutButton from "./LogoutButton";
+import { useSearchParams } from "react-router-dom";
+import { useUser } from "../UserContext.jsx";
+import { fetchUpcomingEvents, fetchAttending } from "../api.js";
+import LogoutButton from "./LogoutButton.jsx";
+import Event from "./Event.jsx";
 
 import {
 	ChevronLeftIcon,
@@ -9,22 +12,28 @@ import {
 	ClipboardDocumentCheckIcon,
 } from "@heroicons/react/20/solid";
 import { useAuth0 } from "@auth0/auth0-react";
-import Dropdown from "./Dropdown";
-import PageButtons from "./PageButtons";
+import Dropdown from "./Dropdown.jsx";
+import PageButtons from "./PageButtons.jsx";
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
 }
 
-export default function Calendar({ user }) {
+export default function Home() {
+	let [searchParams, setSearchParams] = useSearchParams();
 	const { isAuthenticated, isLoading } = useAuth0();
 	const [display, setDisplay] = useState([]);
+	const [prevDisplay, setPrevDisplay] = useState([]);
+	const [eventId, setEventId] = useState(searchParams.get("eventId") || null);
 	const [page, setPage] = useState(1);
 	const [upcomingEvents, setUpcomingEvents] = useState([]);
 	const [attendingEvents, setAttendingEvents] = useState([]);
 	const [myEvents, setMyEvents] = useState([]);
 
+	const user = useUser();
+
 	useEffect(() => {
+		setEventId(searchParams.get("eventId"));
 		fetchUpcomingEvents()
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
@@ -92,8 +101,8 @@ export default function Calendar({ user }) {
 
 	return user ? (
 		<>
-			<div className="container md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
-				<div className="calendar md:pr-14">
+			<div className="container h-full md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
+				<div className="calendar my-auto md:pr-14">
 					<div className="flex items-center">
 						<h2 className="flex-auto text-sm font-semibold text-gray-900">
 							January 2022
@@ -165,38 +174,53 @@ export default function Calendar({ user }) {
 						))}
 					</div>
 				</div>
+				{!display.title && !eventId ? ( // Will display an event if display has a key of title.
+					<section className="event-display flex flex-col justify-center max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
+						<Dropdown
+							setDisplay={setDisplay}
+							upcomingEvents={upcomingEvents}
+							attendingEvents={attendingEvents}
+						/>
 
-				<section className="event-display max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
-					<Dropdown
-						setDisplay={setDisplay}
-						upcomingEvents={upcomingEvents}
-						attendingEvents={attendingEvents}
+						<ol className="mt-10 max-h-80 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
+							{!display.title
+								? display.map((event, i) => (
+										<li
+											key={`upcoming${i}`}
+											className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
+											onClick={() => {
+												setPrevDisplay(display);
+												setSearchParams({ eventId: event.event_id });
+												setDisplay(event);
+												setEventId(event.event_id);
+											}}
+										>
+											<div className="flex-auto">
+												<p className="text-gray-900">{event.title}</p>
+												<p className="mt-0.5">
+													<time dateTime={""}>
+														{event.datetime.toDateString()}
+													</time>{" "}
+													{" at "}
+													<time dateTime={""}>
+														{event.datetime.toTimeString().slice(0, 9)}
+													</time>
+												</p>
+											</div>
+										</li>
+								  ))
+								: null}
+						</ol>
+
+						<PageButtons />
+					</section>
+				) : (
+					<Event
+						event={display}
+						eventId={eventId}
+						setEvent={setDisplay}
 					/>
-					<ol className="mt-10 max-h-80 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
-						{display.length > 0
-							? display.map((event, i) => (
-									<li
-										key={`upcoming${i}`}
-										className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
-									>
-										<div className="flex-auto">
-											<p className="text-gray-900">{event.title}</p>
-											<p className="mt-0.5">
-												<time dateTime={""}>
-													{event.datetime.toDateString()}
-												</time>{" "}
-												{" at "}
-												<time dateTime={""}>
-													{event.datetime.toTimeString().slice(0, 9)}
-												</time>
-											</p>
-										</div>
-									</li>
-							  ))
-							: null}
-					</ol>
-					<PageButtons />
-				</section>
+				)}
 			</div>
 			<div className="flex justify-around w-full md:w-3/4">
 				<button

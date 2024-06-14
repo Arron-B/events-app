@@ -1,14 +1,16 @@
 import { HomeIcon } from "@heroicons/react/20/solid";
-import { useAuth0 } from "@auth0/auth0-react";
+import { useUser } from "../UserContext.jsx";
 
-export default function Nav({ user }) {
+export default function Nav() {
+	const user = useUser();
+
 	return user ? (
 		<nav
 			className="flex w-full justify-around"
 			aria-label="Breadcrumb"
 		>
 			<a
-				href="#"
+				href="/"
 				className="text-gray-400 hover:text-gray-500"
 			>
 				<HomeIcon
