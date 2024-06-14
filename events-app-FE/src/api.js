@@ -46,3 +46,19 @@ export function fetchAttending(userId) {
 		}
 	});
 }
+
+export function fetchEventById(eventId) {
+	return axios.get(`${domainName}/api/events/${eventId}`).then((res) => {
+		const eventParsed = res.data.event;
+		eventParsed.datetime = dateParse(res.data.event.datetime);
+		return eventParsed;
+	});
+}
+
+export function fetchAttendance(eventId) {
+	return axios
+		.get(`${domainName}/api/events/${eventId}/attendance`)
+		.then((res) => {
+			return res;
+		});
+}

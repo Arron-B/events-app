@@ -1,18 +1,34 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+	createBrowserRouter,
+	RouterProvider,
+	useLocation,
+} from "react-router-dom";
 import { Auth0Provider } from "@auth0/auth0-react";
 import "./index.css";
 import ErrorPage from "./error-page";
-import Calendar from "./components/Calendar.jsx";
+import Home from "./components/Home.jsx";
+import Event from "./components/Event.jsx";
 
 const router = createBrowserRouter([
 	{
 		path: "/",
 		element: <App />,
 		errorElement: <ErrorPage />,
-		children: [],
+		children: [
+			{
+				path: "/",
+				element: <Home />,
+				children: [
+					// {
+					// 	path: "event",
+					// 	element: <Event />,
+					// },
+				],
+			},
+		],
 	},
 ]);
 
