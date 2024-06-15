@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchUserById, fetchEventById, fetchAttendance } from "../api";
+import { useUser } from "../UserContext.jsx";
+import { fetchUserById, fetchEventById, fetchAttendance, fetchAttending, attendEvent, removeAttendEvent } from "../api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGooglePlus } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -13,11 +14,15 @@ import {
 } from "@heroicons/react/20/solid";
 import Loading from "./Loading";
 
-export default function Event({ event, setEvent, eventId }) {
+export default function Event({ event, setEvent, eventId, attendingEvents, setAttendingEvents }) {
 	const [organiser, setOrganiser] = useState(null);
 	const [attendance, setAttendance] = useState(null);
+	const [userAttendingThis, setUserAttendingThis] = useState(false)
+
+	const user = useUser();
 
 	useEffect(() => {
+		setUserAttendingThis(false)
 		fetchEventById(eventId)
 			.then((eventParsed) => {
 				setEvent(eventParsed);
@@ -35,11 +40,24 @@ export default function Event({ event, setEvent, eventId }) {
 
 		fetchAttendance(eventId)
 			.then((res) => {
-				setAttendance(res.data.attendance.attendance);
+				
+				setAttendance(res.data.attendance.attendance)
+
 			})
 			.catch((err) => {
 				console.log(err);
 			});
+
+		fetchAttending(user.user_id)
+		.then((eventsParsed) => {
+			setAttendingEvents(eventsParsed)
+			eventsParsed.forEach((event) => {
+				if (event.event_id === eventId) {
+					setUserAttendingThis(true)
+				}
+			})
+		})
+		
 	}, [eventId]);
 
 	return event.datetime ? (

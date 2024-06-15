@@ -80,3 +80,23 @@ export function setAsStaff(userId) {
 			return res;
 		});
 }
+
+export function attendEvent(eventId, userId) {
+	return axios.post(`/api/events/${eventId}/attending`, { user_id: userId }).then((res) => {
+		return res;
+	})
+}
+
+export function removeAttendEvent(eventId, userId) {
+	return axios.delete(`/api/events/${eventId}/attending`, { user_id: userId }).then((res) => {
+		return res;
+	})
+}
+
+export function fetchAttendees(eventId) {
+	return axios
+		.get(`${domainName}/api/events/${eventId}/attendees`)
+		.then((res) => {
+			return res;
+		});
+}
