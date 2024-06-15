@@ -11,6 +11,7 @@ import {
 	MapPinIcon,
 	UserGroupIcon,
 	PlusIcon,
+	XMarkIcon
 } from "@heroicons/react/20/solid";
 import Loading from "./Loading";
 
@@ -180,7 +181,7 @@ export default function Event({ event, setEvent, eventId, attendingEvents, setAt
 							}}
 						>
 							<span className="sr-only">Button cancel attendance</span>
-							<PlusIcon
+							<XMarkIcon
 								className="h-5 w-5"
 								aria-hidden="true"
 							/>{" "}
