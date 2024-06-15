@@ -626,7 +626,7 @@ describe("POST /api/events", () => {
 	});
 });
 
-describe("POST /api/events/:event_id/attending", () => {
+describe("POST /api/events/:event_id", () => {
 	test("resolves with status 201 and returns correct attendance details.", () => {
 		const newAttendance = {
 			user_id: "auth0Id2",

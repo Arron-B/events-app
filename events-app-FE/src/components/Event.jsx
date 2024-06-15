@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../UserContext.jsx";
-import { fetchUserById, fetchEventById, fetchAttendance, fetchAttending, attendEvent, removeAttendEvent } from "../api";
+import { fetchUserById, fetchEventById, fetchAttendance, fetchAttending, attendEvent, removeAttendEvent, fetchAttendees } from "../api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGooglePlus } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -48,15 +48,20 @@ export default function Event({ event, setEvent, eventId, attendingEvents, setAt
 				console.log(err);
 			});
 
-		fetchAttending(user.user_id)
-		.then((eventsParsed) => {
-			setAttendingEvents(eventsParsed)
-			eventsParsed.forEach((event) => {
-				if (event.event_id === eventId) {
+		fetchAttendees(eventId)
+		.then((res) => {
+			const attendees = res.data.attendees
+			attendees.forEach((attendee) => {
+				if (attendee.name === user.name) {
 					setUserAttendingThis(true)
 				}
 			})
+			
 		})
+			.catch((err) => {
+				setUserAttendingThis(false)
+			})
+		
 		
 	}, [eventId]);
 
@@ -148,7 +153,14 @@ export default function Event({ event, setEvent, eventId, attendingEvents, setAt
 					<div className="mt-4 flex w-full flex-none gap-x-4 px-6">
 						<button
 							type="button"
-							className="rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+							className={"rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" + (userAttendingThis ? " hidden" : "")}
+							onClick={() => {
+								attendEvent(eventId, user.user_id).then((res) => {
+									setUserAttendingThis(true)
+								}).catch((err) => {
+									console.log(err)
+								})
+							}}
 						>
 							<span className="sr-only">Button attend event</span>
 							<PlusIcon
@@ -156,10 +168,27 @@ export default function Event({ event, setEvent, eventId, attendingEvents, setAt
 								aria-hidden="true"
 							/>{" "}
 						</button>{" "}
-						<p className="text-md leading-6 text-gray-500">Attend Event</p>
+						<button
+							type="button"
+							className={"rounded-full bg-red-600 p-1 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600" + (!userAttendingThis ? " hidden" : "")}
+							onClick={() => {
+								removeAttendEvent(eventId, user.user_id).then((res) => {
+									setUserAttendingThis(false)
+								}).catch((err) => {
+									console.log(err)
+								})
+							}}
+						>
+							<span className="sr-only">Button cancel attendance</span>
+							<PlusIcon
+								className="h-5 w-5"
+								aria-hidden="true"
+							/>{" "}
+						</button>{" "}
+						<p className="text-md leading-6 text-gray-500">{userAttendingThis ? "Cancel" : "Attend Event"}</p>
 					</div>
 					<div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-						<span className="sr-only">Button attend event</span>
+						<span className="sr-only">Button add event to google calendar</span>
 						<FontAwesomeIcon
 							className="h-5 w-5 rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 							icon={faGooglePlus}
