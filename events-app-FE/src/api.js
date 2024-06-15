@@ -82,13 +82,13 @@ export function setAsStaff(userId) {
 }
 
 export function attendEvent(eventId, userId) {
-	return axios.post(`/api/events/${eventId}/attending`, { user_id: userId }).then((res) => {
+	return axios.post(`${domainName}/api/events/${eventId}`, { user_id: userId }).then((res) => {
 		return res;
 	})
 }
 
 export function removeAttendEvent(eventId, userId) {
-	return axios.delete(`/api/events/${eventId}/attending`, { user_id: userId }).then((res) => {
+	return axios.delete(`${domainName}/api/events/${eventId}/attendee`, { data: {user_id: userId} }).then((res) => {
 		return res;
 	})
 }
