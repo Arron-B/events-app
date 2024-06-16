@@ -11,11 +11,11 @@ import {
 	MapPinIcon,
 	UserGroupIcon,
 	PlusIcon,
-	XMarkIcon
+	XMarkIcon, ChevronLeftIcon
 } from "@heroicons/react/20/solid";
 import Loading from "./Loading";
 
-export default function Event({ event, setEvent, eventId, attendingEvents, setAttendingEvents }) {
+export default function Event({ event, setEvent, eventId, setEventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams }) {
 	const [organiser, setOrganiser] = useState(null);
 	const [attendance, setAttendance] = useState(null);
 	const [userAttendingThis, setUserAttendingThis] = useState(false)
@@ -200,6 +200,26 @@ export default function Event({ event, setEvent, eventId, attendingEvents, setAt
 							Add to Google Calendar
 						</p>
 					</div>
+					<div className="mt-4 flex flex-none px-6">
+					<button
+							type="button"
+							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+							onClick={() => {
+									prevDisplay ? setDisplay(prevDisplay) : setDisplay(upcomingEvents)
+									setSearchParams("")
+									setEventId(null)	
+							}}
+						>
+							<span className="sr-only">Back to event list</span>
+							<ChevronLeftIcon
+								className="h-5 w-5"
+								aria-hidden="true"
+							/>
+						</button>
+						<p className="text-md leading-6 text-gray-500">
+							Back
+						</p>
+						</div>
 				</dl>
 			</div>
 		</div>
