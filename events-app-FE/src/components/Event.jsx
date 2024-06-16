@@ -16,11 +16,13 @@ import {
 import { google } from "calendar-link";
 import Loading from "./Loading";
 
-export default function Event({ event, setEvent, eventId, setEventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams }) {
+export default function Event({ event, eventId, setEventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams, searchParams }) {
 	const [organiser, setOrganiser] = useState(null);
 	const [attendance, setAttendance] = useState(null);
 	const [userAttendingThis, setUserAttendingThis] = useState(false)
 	const [googleUrl, setGoogleUrl] = useState(null)
+	const [attendButtonActive, setAttendButtonActive] = useState(true)
+	const [isLoading, setIsLoading] = useState(true)
 
 	const user = useUser();
 
@@ -28,7 +30,7 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 		setUserAttendingThis(false)
 		fetchEventById(eventId)
 			.then((eventParsed) => {
-				setEvent(eventParsed);
+				setDisplay(eventParsed);
 				setGoogleUrl(google({
 					title: eventParsed.title,
 					description: eventParsed.description,
@@ -64,18 +66,20 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 			attendees.forEach((attendee) => {
 				if (attendee.name === user.name) {
 					setUserAttendingThis(true)
+					setIsLoading(false)
 				}
 			})
 			
 		})
 			.catch((err) => {
 				setUserAttendingThis(false)
+				setIsLoading(false)
 			})
 		
 		
-	}, [eventId]);
+	}, [eventId, searchParams]);
 
-	return event.datetime ? (
+	return event.datetime && !isLoading ? (
 		<div className="">
 			<h2 className="sr-only">Event titled {event.title}</h2>
 			<div className="h-full flex flex-col justify-around rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
@@ -163,11 +167,19 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 					<div className="mt-4 flex w-full flex-none gap-x-4 px-6">
 						<button
 							type="button"
+							disabled={!attendButtonActive}
 							className={"rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" + (userAttendingThis ? " hidden" : "")}
 							onClick={() => {
+								setAttendButtonActive(false)
 								attendEvent(eventId, user.user_id).then((res) => {
 									setUserAttendingThis(true)
+									setTimeout(() => {
+										setAttendButtonActive(true)
+									}, 3000)
 								}).catch((err) => {
+									setTimeout(() => {
+										setAttendButtonActive(true)
+									}, 3000)
 									console.log(err)
 								})
 							}}
@@ -180,12 +192,20 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 						</button>{" "}
 						<button
 							type="button"
+							disabled={!attendButtonActive}
 							className={"rounded-full bg-red-600 p-1 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600" + (!userAttendingThis ? " hidden" : "")}
 							onClick={() => {
+								setAttendButtonActive(false)
 								removeAttendEvent(eventId, user.user_id).then((res) => {
 									setUserAttendingThis(false)
+									setTimeout(() => {
+										setAttendButtonActive(true)
+									}, 3000)
 								}).catch((err) => {
 									console.log(err)
+									setTimeout(() => {
+										setAttendButtonActive(true)
+									}, 3000)
 								})
 							}}
 						>

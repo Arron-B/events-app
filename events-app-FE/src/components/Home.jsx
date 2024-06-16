@@ -40,6 +40,7 @@ export default function Home({ setUser }) {
 	const user = useUser();
 
 	useEffect(() => {  // sets upcoming event lists on load/reload
+		setPage(1)
 		setEventId(searchParams.get("eventId"));
 		fetchUpcomingEvents()
 			.then((eventsParsed) => {
@@ -260,12 +261,12 @@ export default function Home({ setUser }) {
 					<Event
 						event={display}
 						eventId={eventId}
-						setEvent={setDisplay}
 						setEventId={setEventId}
 						prevDisplay={prevDisplay}
 						setDisplay={setDisplay}
 						upcomingEvents={upcomingEvents}
 						setSearchParams={setSearchParams}
+						searchParams={searchParams}
 					/>
 				)}
 			</div>
