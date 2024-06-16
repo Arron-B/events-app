@@ -13,13 +13,14 @@ import {
 	PlusIcon,
 	XMarkIcon, ChevronLeftIcon
 } from "@heroicons/react/20/solid";
+import { google } from "calendar-link";
 import Loading from "./Loading";
-import { pageHandler } from "../../utils.js";
 
 export default function Event({ event, setEvent, eventId, setEventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams }) {
 	const [organiser, setOrganiser] = useState(null);
 	const [attendance, setAttendance] = useState(null);
 	const [userAttendingThis, setUserAttendingThis] = useState(false)
+	const [googleUrl, setGoogleUrl] = useState(null)
 
 	const user = useUser();
 
@@ -28,6 +29,13 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 		fetchEventById(eventId)
 			.then((eventParsed) => {
 				setEvent(eventParsed);
+				setGoogleUrl(google({
+					title: eventParsed.title,
+					description: eventParsed.description,
+					location: eventParsed.location,
+					start: eventParsed.datetime,
+					duration: [1, "hour"]
+				}));
 				fetchUserById(eventParsed.organiser)
 					.then((res) => {
 						setOrganiser(res.data.user.name);
@@ -76,7 +84,7 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 						<dt className="text-sm font-semibold leading-6 text-gray-900">
 							<span className="sr-only">Event title</span>
 						</dt>
-						<dd className="text-base font-semibold leading-6 text-gray-900">
+						<dd className="text-base text-start font-semibold leading-6 text-gray-900">
 							{event.title}
 						</dd>
 					</div>
@@ -191,6 +199,9 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 					</div>
 					<div className="mt-4 flex w-full flex-none gap-x-4 px-6">
 						<span className="sr-only">Button add event to google calendar</span>
+						<a className="flex gap-4"
+						href={googleUrl}
+						target="_blank">
 						<FontAwesomeIcon
 							className="h-5 w-5 rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 							icon={faGooglePlus}
@@ -200,6 +211,7 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 						<p className="text-md leading-6 text-gray-500">
 							Add to Google Calendar
 						</p>
+						</a>
 					</div>
 					<div className="mt-4 flex flex-none px-6">
 					<button
