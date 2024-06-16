@@ -216,10 +216,11 @@ export default function Event({ event, setEvent, eventId, setEventId, prevDispla
 								className="h-5 w-5"
 								aria-hidden="true"
 							/>
-						</button>
-						<p className="text-md leading-6 text-gray-500">
+							<p className="text-md leading-6 text-gray-500">
 							Back
 						</p>
+						</button>
+						
 						</div>
 				</dl>
 			</div>

@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useUser } from "../UserContext.jsx";
 import { fetchUpcomingEvents, fetchAttending, staffVerify } from "../api.js";
 import LogoutButton from "./LogoutButton.jsx";
-import StaffVerifyModal from "./StaffVerifyModal.jsx";
+import Modal from "./Modal.jsx";
 import Event from "./Event.jsx";
 import { pageHandler } from "../../utils.js";
 
@@ -23,6 +23,8 @@ function classNames(...classes) {
 
 export default function Home({ setUser }) {
 	let [searchParams, setSearchParams] = useSearchParams();
+	const isInitialMount = useRef(true); // checking if page is mounted
+
 	const [open, setOpen] = useState(false); //modal controls
 	const { isAuthenticated, isLoading } = useAuth0();
 	const [display, setDisplay] = useState([]);
@@ -32,10 +34,12 @@ export default function Home({ setUser }) {
 	const [upcomingEvents, setUpcomingEvents] = useState([]);
 	const [attendingEvents, setAttendingEvents] = useState([]);
 	const [myEvents, setMyEvents] = useState([]);
+	const [newEventPosted, setNewEventPosted] = useState(1);
+	const [selection, setSelection] = useState("Upcoming Events"); // sets text showing in closed dropdown bar
 
 	const user = useUser();
 
-	useEffect(() => {
+	useEffect(() => {  // sets upcoming event lists on load/reload
 		setEventId(searchParams.get("eventId"));
 		fetchUpcomingEvents()
 			.then((eventsParsed) => {
@@ -45,9 +49,28 @@ export default function Home({ setUser }) {
 			.catch((err) => {
 				console.log(err);
 			});
+			
 	}, []);
 
-	useEffect(() => {
+	useEffect(() => { // updates event lists on new event submission
+		if (isInitialMount.current) { // prevents running contents on initial mount
+			isInitialMount.current = false;
+		}
+		else {
+		fetchUpcomingEvents()
+			.then((eventsParsed) => {
+				setUpcomingEvents(eventsParsed);
+				setPrevDisplay(null)   // prevents back button on event component from displaying out of date list
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+
+			// update my events here
+		}
+	}, [newEventPosted]);
+
+	useEffect(() => { // sets attending and my events lists upon user authentication
 		fetchAttending(user.user_id)
 			.then((eventsParsed) => {
 				setAttendingEvents(eventsParsed);
@@ -55,6 +78,8 @@ export default function Home({ setUser }) {
 			.catch((err) => {
 				console.log(err);
 			});
+
+			// fetch my events here
 	}, [user]);
 
 	const days = [
@@ -104,10 +129,14 @@ export default function Home({ setUser }) {
 
 	return user ? (
 		<>
-			<StaffVerifyModal
+			<Modal
 				open={open}
 				setOpen={setOpen}
-				setUser={setUser}
+				setEventId={setEventId}
+				setSearchParams={setSearchParams}
+				setDisplay={setDisplay}
+				setNewEventPosted={setNewEventPosted}
+				newEventPosted={newEventPosted}
 			/>
 			<div className="container h-full md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
 				<div className="calendar my-auto md:pr-14">
@@ -186,9 +215,13 @@ export default function Home({ setUser }) {
 					<section className="event-display flex flex-col justify-center max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
 						<Dropdown
 							setDisplay={setDisplay}
+							display={display}
 							upcomingEvents={upcomingEvents}
 							attendingEvents={attendingEvents}
 							setPage={setPage}
+							setPrevDisplay={setPrevDisplay}
+							selection={selection}
+							setSelection={setSelection}
 						/>
 
 						<ol className="mt-3 max-h-96 h-96 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
@@ -242,9 +275,7 @@ export default function Home({ setUser }) {
 					className="relative w-1/3 md:w-[20%] inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
 					onClick={(e) => {
 						e.preventDefault();
-						if (!user.staff) {
 							setOpen(true);
-						}
 					}}
 				>
 					{user.staff ? (
