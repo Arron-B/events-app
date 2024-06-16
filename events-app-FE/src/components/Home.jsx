@@ -226,6 +226,8 @@ export default function Home({ setUser }) {
 						event={display}
 						eventId={eventId}
 						setEvent={setDisplay}
+						attendingEvents={attendingEvents}
+						setAttendingEvents={setAttendingEvents}
 					/>
 				)}
 			</div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchUserById, fetchEventById, fetchAttendance } from "../api";
+import { useUser } from "../UserContext.jsx";
+import { fetchUserById, fetchEventById, fetchAttendance, fetchAttending, attendEvent, removeAttendEvent, fetchAttendees } from "../api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGooglePlus } from "@fortawesome/free-brands-svg-icons";
 import {
@@ -10,14 +11,19 @@ import {
 	MapPinIcon,
 	UserGroupIcon,
 	PlusIcon,
+	XMarkIcon
 } from "@heroicons/react/20/solid";
 import Loading from "./Loading";
 
-export default function Event({ event, setEvent, eventId }) {
+export default function Event({ event, setEvent, eventId, attendingEvents, setAttendingEvents }) {
 	const [organiser, setOrganiser] = useState(null);
 	const [attendance, setAttendance] = useState(null);
+	const [userAttendingThis, setUserAttendingThis] = useState(false)
+
+	const user = useUser();
 
 	useEffect(() => {
+		setUserAttendingThis(false)
 		fetchEventById(eventId)
 			.then((eventParsed) => {
 				setEvent(eventParsed);
@@ -35,11 +41,29 @@ export default function Event({ event, setEvent, eventId }) {
 
 		fetchAttendance(eventId)
 			.then((res) => {
-				setAttendance(res.data.attendance.attendance);
+				
+				setAttendance(res.data.attendance.attendance)
+
 			})
 			.catch((err) => {
 				console.log(err);
 			});
+
+		fetchAttendees(eventId)
+		.then((res) => {
+			const attendees = res.data.attendees
+			attendees.forEach((attendee) => {
+				if (attendee.name === user.name) {
+					setUserAttendingThis(true)
+				}
+			})
+			
+		})
+			.catch((err) => {
+				setUserAttendingThis(false)
+			})
+		
+		
 	}, [eventId]);
 
 	return event.datetime ? (
@@ -130,7 +154,14 @@ export default function Event({ event, setEvent, eventId }) {
 					<div className="mt-4 flex w-full flex-none gap-x-4 px-6">
 						<button
 							type="button"
-							className="rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+							className={"rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" + (userAttendingThis ? " hidden" : "")}
+							onClick={() => {
+								attendEvent(eventId, user.user_id).then((res) => {
+									setUserAttendingThis(true)
+								}).catch((err) => {
+									console.log(err)
+								})
+							}}
 						>
 							<span className="sr-only">Button attend event</span>
 							<PlusIcon
@@ -138,10 +169,27 @@ export default function Event({ event, setEvent, eventId }) {
 								aria-hidden="true"
 							/>{" "}
 						</button>{" "}
-						<p className="text-md leading-6 text-gray-500">Attend Event</p>
+						<button
+							type="button"
+							className={"rounded-full bg-red-600 p-1 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600" + (!userAttendingThis ? " hidden" : "")}
+							onClick={() => {
+								removeAttendEvent(eventId, user.user_id).then((res) => {
+									setUserAttendingThis(false)
+								}).catch((err) => {
+									console.log(err)
+								})
+							}}
+						>
+							<span className="sr-only">Button cancel attendance</span>
+							<XMarkIcon
+								className="h-5 w-5"
+								aria-hidden="true"
+							/>{" "}
+						</button>{" "}
+						<p className="text-md leading-6 text-gray-500">{userAttendingThis ? "Cancel" : "Attend Event"}</p>
 					</div>
 					<div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-						<span className="sr-only">Button attend event</span>
+						<span className="sr-only">Button add event to google calendar</span>
 						<FontAwesomeIcon
 							className="h-5 w-5 rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
 							icon={faGooglePlus}

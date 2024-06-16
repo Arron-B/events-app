@@ -185,7 +185,7 @@
 			}
 		}
 	},
-	"POST /api/events/:event_id/attending": {
+	"POST /api/events/:event_id": {
 		"description": "Takes event_id and user_id and submits the user as attending the event",
 		"queries": ["user_id"],
 		"exampleResponse": {
