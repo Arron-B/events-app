@@ -16,6 +16,7 @@ export default function Dropdown({
 	setDisplay,
 	upcomingEvents,
 	attendingEvents,
+	setPage
 }) {
 	const [selection, setSelection] = useState("Upcoming Events");
 
@@ -50,6 +51,7 @@ export default function Dropdown({
 									onClick={() => {
 										setSelection("Upcoming Events");
 										setDisplay([...upcomingEvents]);
+										setPage(1)
 									}}
 									className={classNames(
 										focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
@@ -67,6 +69,7 @@ export default function Dropdown({
 									onClick={() => {
 										setSelection("Attending");
 										setDisplay([...attendingEvents]);
+										setPage(1)
 									}}
 									className={classNames(
 										focus ? "bg-gray-100 text-gray-900" : "text-gray-700",
@@ -83,6 +86,7 @@ export default function Dropdown({
 								<a
 									onClick={() => {
 										setSelection("My Events");
+										setPage(1)
 									}}
 									className={classNames(
 										focus ? "bg-gray-100 text-gray-900" : "text-gray-700",

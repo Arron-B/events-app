@@ -5,6 +5,7 @@ import { fetchUpcomingEvents, fetchAttending, staffVerify } from "../api.js";
 import LogoutButton from "./LogoutButton.jsx";
 import StaffVerifyModal from "./StaffVerifyModal.jsx";
 import Event from "./Event.jsx";
+import { pageHandler } from "../../utils.js";
 
 import {
 	ChevronLeftIcon,
@@ -27,7 +28,7 @@ export default function Home({ setUser }) {
 	const [display, setDisplay] = useState([]);
 	const [prevDisplay, setPrevDisplay] = useState(null);
 	const [eventId, setEventId] = useState(searchParams.get("eventId") || null);
-	const [page, setPage] = useState(1);
+	const [page, setPage] = useState(2);
 	const [upcomingEvents, setUpcomingEvents] = useState([]);
 	const [attendingEvents, setAttendingEvents] = useState([]);
 	const [myEvents, setMyEvents] = useState([]);
@@ -187,11 +188,12 @@ export default function Home({ setUser }) {
 							setDisplay={setDisplay}
 							upcomingEvents={upcomingEvents}
 							attendingEvents={attendingEvents}
+							setPage={setPage}
 						/>
 
-						<ol className="mt-10 max-h-80 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
+						<ol className="mt-3 max-h-96 h-96 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
 							{!display.title
-								? display.map((event, i) => (
+								? pageHandler(display, page).map((event, i) => (
 										<li
 											key={`upcoming${i}`}
 											className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
@@ -219,7 +221,7 @@ export default function Home({ setUser }) {
 								: null}
 						</ol>
 
-						<PageButtons />
+						<PageButtons page={page} setPage={setPage} display={display} />
 					</section>
 				) : (
 					<Event
