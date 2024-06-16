@@ -25,7 +25,7 @@ export default function Home({ setUser }) {
 	const [open, setOpen] = useState(false); //modal controls
 	const { isAuthenticated, isLoading } = useAuth0();
 	const [display, setDisplay] = useState([]);
-	const [prevDisplay, setPrevDisplay] = useState([]);
+	const [prevDisplay, setPrevDisplay] = useState(null);
 	const [eventId, setEventId] = useState(searchParams.get("eventId") || null);
 	const [page, setPage] = useState(1);
 	const [upcomingEvents, setUpcomingEvents] = useState([]);
@@ -226,8 +226,11 @@ export default function Home({ setUser }) {
 						event={display}
 						eventId={eventId}
 						setEvent={setDisplay}
-						attendingEvents={attendingEvents}
-						setAttendingEvents={setAttendingEvents}
+						setEventId={setEventId}
+						prevDisplay={prevDisplay}
+						setDisplay={setDisplay}
+						upcomingEvents={upcomingEvents}
+						setSearchParams={setSearchParams}
 					/>
 				)}
 			</div>
