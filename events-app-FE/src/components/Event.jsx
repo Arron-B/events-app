@@ -14,6 +14,7 @@ import {
 	XMarkIcon, ChevronLeftIcon
 } from "@heroicons/react/20/solid";
 import Loading from "./Loading";
+import { pageHandler } from "../../utils.js";
 
 export default function Event({ event, setEvent, eventId, setEventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams }) {
 	const [organiser, setOrganiser] = useState(null);
