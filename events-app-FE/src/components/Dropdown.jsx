@@ -14,11 +14,14 @@ function classNames(...classes) {
 
 export default function Dropdown({
 	setDisplay,
+	display,
 	upcomingEvents,
 	attendingEvents,
-	setPage
+	setPage,
+	setPrevDisplay,
+	selection,
+	setSelection
 }) {
-	const [selection, setSelection] = useState("Upcoming Events");
 
 	return (
 		<Menu
@@ -50,6 +53,7 @@ export default function Dropdown({
 								<option
 									onClick={() => {
 										setSelection("Upcoming Events");
+										setPrevDisplay([...display])
 										setDisplay([...upcomingEvents]);
 										setPage(1)
 									}}
@@ -68,6 +72,7 @@ export default function Dropdown({
 								<a
 									onClick={() => {
 										setSelection("Attending");
+										setPrevDisplay([...display])
 										setDisplay([...attendingEvents]);
 										setPage(1)
 									}}
@@ -86,6 +91,7 @@ export default function Dropdown({
 								<a
 									onClick={() => {
 										setSelection("My Events");
+										setPrevDisplay([...display])
 										setPage(1)
 									}}
 									className={classNames(

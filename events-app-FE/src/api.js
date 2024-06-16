@@ -100,3 +100,14 @@ export function fetchAttendees(eventId) {
 			return res;
 		});
 }
+
+export function postNewEvent(title, description, organiser, dateTime, location) {
+	let dateTimeUTC = new Date(dateTime)
+	dateTimeUTC = dateTimeUTC.toISOString()
+	return axios.post(`${domainName}/api/events`, { title: title, description: description, organiser: organiser, datetime: dateTimeUTC, location: location }).then((res) => {
+		const eventParsed = res.data.event;
+		eventParsed.datetime = dateParse(res.data.event.datetime);
+		return eventParsed;
+	})
+
+}
