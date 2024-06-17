@@ -111,3 +111,19 @@ export function postNewEvent(title, description, organiser, dateTime, location) 
 	})
 
 }
+
+
+export function fetchMyEvents(userId) {
+	return axios.get(`${domainName}/api/users/auth0Id1/attending`).then((res) => {
+		if (res.data.attending) {
+			const eventsParsed = res.data.attending.map((event) => {
+				const eventParsed = { ...event };
+				eventParsed.datetime = dateParse(event.datetime);
+				return eventParsed;
+			});
+			return eventsParsed;
+		} else {
+			return [];
+		}
+	});
+}

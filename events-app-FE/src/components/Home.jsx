@@ -62,16 +62,16 @@ export default function Home({ setUser }) {
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
 				setPrevDisplay(null)   // prevents back button on event component from displaying out of date list
+				setSelection("Upcoming Events")
+				setPage(1)
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-
-			// update my events here
 		}
 	}, [newEventPosted]);
 
-	useEffect(() => { // sets attending and my events lists upon user authentication
+	useEffect(() => { // sets attending list upon user authentication
 		fetchAttending(user.user_id)
 			.then((eventsParsed) => {
 				setAttendingEvents(eventsParsed);
@@ -79,9 +79,14 @@ export default function Home({ setUser }) {
 			.catch((err) => {
 				console.log(err);
 			});
-
-			// fetch my events here
 	}, [user]);
+
+	useEffect(() => { // sets my events list if user is staff and whenever upcoming events changes
+		if (user.staff) {
+			const filterMyEvents = upcomingEvents.filter((event) => event.organiser === user.user_id)
+			setMyEvents(filterMyEvents)
+		}
+	}, [upcomingEvents]);
 
 	const days = [
 		{ date: "2021-12-27" },
@@ -135,7 +140,9 @@ export default function Home({ setUser }) {
 				setOpen={setOpen}
 				setEventId={setEventId}
 				setSearchParams={setSearchParams}
+				display={display}
 				setDisplay={setDisplay}
+				setPrevDisplay={setPrevDisplay}
 				setNewEventPosted={setNewEventPosted}
 				newEventPosted={newEventPosted}
 			/>
@@ -219,6 +226,7 @@ export default function Home({ setUser }) {
 							display={display}
 							upcomingEvents={upcomingEvents}
 							attendingEvents={attendingEvents}
+							myEvents={myEvents}
 							setPage={setPage}
 							setPrevDisplay={setPrevDisplay}
 							selection={selection}
