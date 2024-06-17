@@ -12,6 +12,7 @@ import {
 	ChevronRightIcon,
 	PlusIcon,
 	ClipboardDocumentCheckIcon,
+	TrashIcon
 } from "@heroicons/react/20/solid";
 import { useAuth0 } from "@auth0/auth0-react";
 import Dropdown from "./Dropdown.jsx";
@@ -36,6 +37,11 @@ export default function Home({ setUser }) {
 	const [myEvents, setMyEvents] = useState([]);
 	const [newEventPosted, setNewEventPosted] = useState(1);
 	const [selection, setSelection] = useState("Upcoming Events"); // sets text showing in closed dropdown bar
+	const [staffAction, setStaffAction] = useState(null)
+
+	useEffect(() => {
+		console.log(staffAction);
+	}, [staffAction])
 
 	const user = useUser();
 
@@ -46,6 +52,8 @@ export default function Home({ setUser }) {
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
 				setDisplay(eventsParsed);
+				console.log(display);
+				console.log(user.user_id);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -145,6 +153,8 @@ export default function Home({ setUser }) {
 				setPrevDisplay={setPrevDisplay}
 				setNewEventPosted={setNewEventPosted}
 				newEventPosted={newEventPosted}
+				staffAction={staffAction}
+				setStaffAction={setStaffAction}
 			/>
 			<div className="container h-full md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
 				<div className="calendar my-auto md:pr-14">
@@ -238,7 +248,7 @@ export default function Home({ setUser }) {
 								? pageHandler(display, page).map((event, i) => (
 										<li
 											key={`upcoming${i}`}
-											className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
+											className="group relative flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
 											onClick={() => {
 												setPrevDisplay(display);
 												setSearchParams({ eventId: event.event_id });
@@ -257,7 +267,15 @@ export default function Home({ setUser }) {
 														{event.datetime.toTimeString().slice(0, 9)}
 													</time>
 												</p>
+												
 											</div>
+											<TrashIcon
+											onClick={() => setOpen(true)}
+								className={
+									"h-5 w-5 text-red-500 absolute right-0" + (user.user_id !== event.organiser ? " hidden" : "")
+								}
+								aria-hidden="true"
+							/>
 										</li>
 								  ))
 								: null}
@@ -285,6 +303,9 @@ export default function Home({ setUser }) {
 					onClick={(e) => {
 						e.preventDefault();
 							setOpen(true);
+							if (user.staff) {
+								setStaffAction("create")
+							}
 					}}
 				>
 					{user.staff ? (
