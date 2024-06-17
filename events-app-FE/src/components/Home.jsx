@@ -130,6 +130,8 @@ export default function Home({ setUser }) {
 				setToday={setToday}
 				selectedDay={selectedDay}
 				setSelectedDay={setSelectedDay}
+				upcomingEvents={upcomingEvents}
+				setDisplay={setDisplay}
 				/>
 				
 				{!display.event_id ? ( // Will display an event if display has a key of title.
