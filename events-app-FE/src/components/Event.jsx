@@ -16,10 +16,10 @@ import {
 import { google } from "calendar-link";
 import Loading from "./Loading";
 
-export default function Event({ event, eventId, setEventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams, searchParams }) {
+export default function Event({ event, eventId, setEventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams, searchParams, userAttendingThis, setUserAttendingThis, selection, attendingEvents, myEvents }) {
 	const [organiser, setOrganiser] = useState(null);
 	const [attendance, setAttendance] = useState(null);
-	const [userAttendingThis, setUserAttendingThis] = useState(false)
+	
 	const [googleUrl, setGoogleUrl] = useState(null)
 	const [attendButtonActive, setAttendButtonActive] = useState(true)
 	const [isLoading, setIsLoading] = useState(true)
@@ -176,6 +176,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 									setUserAttendingThis(true)
 									setTimeout(() => {
 										setAttendButtonActive(true)
+										setAttendButtonActive(true)
 									}, 3000)
 								}).catch((err) => {
 									setTimeout(() => {
@@ -239,9 +240,24 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 							type="button"
 							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
 							onClick={() => {
-									prevDisplay ? setDisplay(prevDisplay) : setDisplay(upcomingEvents)
-									setSearchParams("")
-									setEventId(null)	
+									
+									if (prevDisplay) {
+										setDisplay(prevDisplay)
+										setSearchParams("")
+									}
+									else if (selection === "Upcoming Events") {
+										setDisplay(upcomingEvents) 
+										setSearchParams("")
+									}
+									else if (selection === "My Events") {
+											setDisplay(myEvents)
+											setSearchParams("")
+										}
+									else if (selection === "Attending") {
+												setDisplay(attendingEvents) 
+												setSearchParams("")
+											}
+										
 							}}
 						>
 							<span className="sr-only">Back to event list</span>
