@@ -1,5 +1,6 @@
 import axios from "axios";
 import { dateParse } from "../utils";
+import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 
 export const domainName = "https://events-app-u5vr.onrender.com";
 
@@ -125,5 +126,11 @@ export function fetchMyEvents(userId) {
 		} else {
 			return [];
 		}
+	});
+}
+
+export function deleteEvent(eventId) {
+	return axios.delete(`${domainName}/api/events/${eventId}`).then((res) => {
+		return res;
 	});
 }

@@ -1,6 +1,8 @@
 import CreateEvent from "./CreateEvent.jsx";
+import EditEvent from "./EditEvent.jsx";
+import DeleteEvent from "./DeleteEvent.jsx";
 
-export default function StaffActions ({staffAction, setStaffAction, errorSuccess, setErrorSuccess, submitDisabled, setSubmitDisabled, setOpen, setEventId, setSearchParams, setDisplay, setNewEventPosted, newEventPosted}) {
+export default function StaffActions ({staffAction, setStaffAction, errorSuccess, setErrorSuccess, submitDisabled, setSubmitDisabled, setOpen, setEventId, setSearchParams, setDisplay, setNewEventPosted, newEventPosted, manipulateEventId, setManipulateEventId}) {
 
     const renderComponent = () => {
         switch (staffAction) {
@@ -17,9 +19,29 @@ export default function StaffActions ({staffAction, setStaffAction, errorSuccess
                         setNewEventPosted={setNewEventPosted}
                         newEventPosted={newEventPosted} />;
           case 'delete':
-            return <p>hello</p>;
+            return <DeleteEvent
+                        manipulateEventId={manipulateEventId}
+                        setManipulateEventId={setManipulateEventId}
+                        errorSuccess={errorSuccess}
+                        setErrorSuccess={setErrorSuccess}
+                        submitDisabled={submitDisabled}
+						setSubmitDisabled={setSubmitDisabled}
+						setOpen={setOpen}
+                        setNewEventPosted={setNewEventPosted}
+						newEventPosted={newEventPosted}
+            />;
           case 'edit':
-            return <p>hello2</p>;
+            return <EditEvent
+                        manipulateEventId={manipulateEventId}
+                        setManipulateEventId={setManipulateEventId}
+                        errorSuccess={errorSuccess}
+                        setErrorSuccess={setErrorSuccess}
+                        submitDisabled={submitDisabled}
+						setSubmitDisabled={setSubmitDisabled}
+						setOpen={setOpen}
+                        setNewEventPosted={setNewEventPosted}
+						newEventPosted={newEventPosted}
+            />;
           default:
             return null;
         }

@@ -10,7 +10,7 @@ import StaffActions from "./StaffActions.jsx";
 import Loading from "./Loading.jsx";
 import { staffVerify, setAsStaff, postNewEvent } from "../api.js";
 
-export default function Modal({ open, setOpen, setEventId, setSearchParams, setDisplay, setNewEventPosted, newEventPosted, staffAction, setStaffAction }) {
+export default function Modal({ open, setOpen, setEventId, setSearchParams, setDisplay, setNewEventPosted, newEventPosted, staffAction, setStaffAction, manipulateEventId, setManipulateEventId }) {
 	const [password, setPassword] = useState("");
 	const [errorSuccess, setErrorSuccess] = useState("");
 
@@ -29,9 +29,8 @@ export default function Modal({ open, setOpen, setEventId, setSearchParams, setD
 				className="relative z-10"
 				onClose={() => {
 					setOpen(false)
-					setTimeout(() => { // prevents empty div displaying quickly before full close
-						setStaffAction(null)
-					}, 200)
+					setManipulateEventId("")
+					setErrorSuccess("")
 				}}
 			>
 				<TransitionChild
@@ -55,7 +54,7 @@ export default function Modal({ open, setOpen, setEventId, setSearchParams, setD
 							leaveFrom="opacity-100 translate-y-0 sm:scale-100"
 							leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
 						>
-							<DialogPanel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+							<DialogPanel className={"relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6" + (!open ? " hidden" : "")}>
 								{ !user.staff ? <form
 									onSubmit={(e) => {
 										e.preventDefault();
@@ -133,6 +132,8 @@ export default function Modal({ open, setOpen, setEventId, setSearchParams, setD
     							setDisplay={setDisplay}
 								setNewEventPosted={setNewEventPosted}
 								newEventPosted={newEventPosted}
+								manipulateEventId={manipulateEventId}
+								setManipulateEventId={setManipulateEventId}
 	/> }
 							</DialogPanel>
 						</TransitionChild>

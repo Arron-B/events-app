@@ -12,7 +12,8 @@ import {
 	ChevronRightIcon,
 	PlusIcon,
 	ClipboardDocumentCheckIcon,
-	TrashIcon
+	TrashIcon,
+	PencilSquareIcon
 } from "@heroicons/react/20/solid";
 import { useAuth0 } from "@auth0/auth0-react";
 import Dropdown from "./Dropdown.jsx";
@@ -35,13 +36,10 @@ export default function Home({ setUser }) {
 	const [upcomingEvents, setUpcomingEvents] = useState([]);
 	const [attendingEvents, setAttendingEvents] = useState([]);
 	const [myEvents, setMyEvents] = useState([]);
-	const [newEventPosted, setNewEventPosted] = useState(1);
+	const [newEventPosted, setNewEventPosted] = useState(1); // triggers update of event lists on event creation, deletion or edit
 	const [selection, setSelection] = useState("Upcoming Events"); // sets text showing in closed dropdown bar
 	const [staffAction, setStaffAction] = useState(null)
-
-	useEffect(() => {
-		console.log(staffAction);
-	}, [staffAction])
+	const [manipulateEventId, setManipulateEventId] = useState("")
 
 	const user = useUser();
 
@@ -52,8 +50,6 @@ export default function Home({ setUser }) {
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
 				setDisplay(eventsParsed);
-				console.log(display);
-				console.log(user.user_id);
 			})
 			.catch((err) => {
 				console.log(err);
@@ -61,17 +57,21 @@ export default function Home({ setUser }) {
 			
 	}, []);
 
-	useEffect(() => { // updates event lists on new event submission
+	useEffect(() => { // updates event lists on new event submission, event deletion or an event being edited
 		if (isInitialMount.current) { // prevents running contents on initial mount
 			isInitialMount.current = false;
 		}
 		else {
+		console.log("updating lists");
 		fetchUpcomingEvents()
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
 				setPrevDisplay(null)   // prevents back button on event component from displaying out of date list
 				setSelection("Upcoming Events")
 				setPage(1)
+				if (staffAction !== "create") { // displays updated event list after an event edit or delete
+					setDisplay(eventsParsed)
+				}
 			})
 			.catch((err) => {
 				console.log(err);
@@ -155,6 +155,8 @@ export default function Home({ setUser }) {
 				newEventPosted={newEventPosted}
 				staffAction={staffAction}
 				setStaffAction={setStaffAction}
+				manipulateEventId={manipulateEventId}
+				setManipulateEventId={setManipulateEventId}
 			/>
 			<div className="container h-full md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
 				<div className="calendar my-auto md:pr-14">
@@ -246,17 +248,19 @@ export default function Home({ setUser }) {
 						<ol className="mt-3 max-h-96 h-96 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
 							{!display.title
 								? pageHandler(display, page).map((event, i) => (
+									
 										<li
 											key={`upcoming${i}`}
 											className="group relative flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
+										>
+											<div className="flex-auto"
 											onClick={() => {
 												setPrevDisplay(display);
 												setSearchParams({ eventId: event.event_id });
 												setDisplay(event);
 												setEventId(event.event_id);
-											}}
-										>
-											<div className="flex-auto">
+												console.log(event);
+											}}>
 												<p className="text-gray-900">{event.title}</p>
 												<p className="mt-0.5">
 													<time dateTime={""}>
@@ -267,15 +271,36 @@ export default function Home({ setUser }) {
 														{event.datetime.toTimeString().slice(0, 9)}
 													</time>
 												</p>
-												
 											</div>
-											<TrashIcon
-											onClick={() => setOpen(true)}
-								className={
-									"h-5 w-5 text-red-500 absolute right-0" + (user.user_id !== event.organiser ? " hidden" : "")
-								}
-								aria-hidden="true"
-							/>
+											<span className="sr-only">Button to edit event</span>
+											<button className="absolute left-0"
+											onClick={() => {
+												setManipulateEventId(event.event_id)
+												setStaffAction("edit")
+												setOpen(true)
+											}}>
+											<PencilSquareIcon
+							className={
+								"h-5 w-5 text-blue-600" + (user.user_id !== event.organiser ? " hidden" : "")
+							}
+							aria-hidden="true"
+						/>
+						</button>
+						<span className="sr-only">Button to delete event</span>
+						<button className="absolute right-0"
+						onClick={() => {
+							setManipulateEventId(event.event_id)
+							setStaffAction("delete")
+							setOpen(true)
+						}}>
+						<TrashIcon	
+							className={
+								"h-5 w-5 text-red-500" + (user.user_id !== event.organiser ? " hidden" : "")
+							}
+							aria-hidden="true"
+						/>
+						</button>
+											
 										</li>
 								  ))
 								: null}

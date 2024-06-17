@@ -41,6 +41,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 				fetchUserById(eventParsed.organiser)
 					.then((res) => {
 						setOrganiser(res.data.user.name);
+						setIsLoading(false)
 					})
 					.catch((err) => {
 						console.log(err);
