@@ -6,7 +6,7 @@ import {
 	Transition,
 } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
+import { useUser } from "../UserContext.jsx";
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(" ");
@@ -17,11 +17,14 @@ export default function Dropdown({
 	display,
 	upcomingEvents,
 	attendingEvents,
+	myEvents,
 	setPage,
 	setPrevDisplay,
 	selection,
 	setSelection
 }) {
+
+	const user = useUser();
 
 	return (
 		<Menu
@@ -86,12 +89,13 @@ export default function Dropdown({
 								</a>
 							)}
 						</MenuItem>
-						<MenuItem>
+						<MenuItem className={!user.staff ? "hidden" : ""}>
 							{({ focus }) => (
 								<a
 									onClick={() => {
 										setSelection("My Events");
 										setPrevDisplay([...display])
+										setDisplay([...myEvents]);
 										setPage(1)
 									}}
 									className={classNames(
