@@ -1,5 +1,6 @@
 import axios from "axios";
 import { dateParse } from "../utils";
+import { ChevronLeftIcon } from "@heroicons/react/20/solid";
 
 export const domainName = "https://events-app-u5vr.onrender.com";
 
@@ -113,6 +114,27 @@ export function postNewEvent(title, description, organiser, dateTime, location) 
 }
 
 
+export function editEvent(eventId, title, description, dateTime, location) {
+	const editFields = {}
+
+	if (title) editFields.title = title
+	if (description) editFields.description = description
+	if (dateTime) {
+		let dateTimeUTC = new Date(dateTime)
+		dateTimeUTC = dateTimeUTC.toISOString()
+		editFields.datetime = dateTimeUTC
+	}
+	if(location) editFields.location = location
+
+	return axios.patch(`${domainName}/api/events/${eventId}`, editFields).then((res) => {
+		const eventParsed = res.data.event;
+		eventParsed.datetime = dateParse(res.data.event.datetime);
+		return eventParsed;
+	})
+
+}
+
+
 export function fetchMyEvents(userId) {
 	return axios.get(`${domainName}/api/users/auth0Id1/attending`).then((res) => {
 		if (res.data.attending) {
@@ -125,5 +147,11 @@ export function fetchMyEvents(userId) {
 		} else {
 			return [];
 		}
+	});
+}
+
+export function deleteEvent(eventId) {
+	return axios.delete(`${domainName}/api/events/${eventId}`).then((res) => {
+		return res;
 	});
 }

@@ -12,6 +12,8 @@ import {
 	ChevronRightIcon,
 	PlusIcon,
 	ClipboardDocumentCheckIcon,
+	TrashIcon,
+	PencilSquareIcon
 } from "@heroicons/react/20/solid";
 import { useAuth0 } from "@auth0/auth0-react";
 import Dropdown from "./Dropdown.jsx";
@@ -34,14 +36,19 @@ export default function Home({ setUser }) {
 	const [upcomingEvents, setUpcomingEvents] = useState([]);
 	const [attendingEvents, setAttendingEvents] = useState([]);
 	const [myEvents, setMyEvents] = useState([]);
-	const [newEventPosted, setNewEventPosted] = useState(1);
+	const [newEventPosted, setNewEventPosted] = useState(1); // triggers update of event lists on event creation, deletion or edit
 	const [selection, setSelection] = useState("Upcoming Events"); // sets text showing in closed dropdown bar
+	const [staffAction, setStaffAction] = useState(null)
+	const [manipulateEventId, setManipulateEventId] = useState("")
 
 	const user = useUser();
 
 	useEffect(() => {  // sets upcoming event lists on load/reload
 		setPage(1)
-		setEventId(searchParams.get("eventId"));
+		setEventId(searchParams.get("eventId") || null);
+		if(eventId) {
+			setDisplay({event_id: eventId})
+		}
 		fetchUpcomingEvents()
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
@@ -53,7 +60,7 @@ export default function Home({ setUser }) {
 			
 	}, []);
 
-	useEffect(() => { // updates event lists on new event submission
+	useEffect(() => { // updates event lists on new event submission, event deletion or an event being edited
 		if (isInitialMount.current) { // prevents running contents on initial mount
 			isInitialMount.current = false;
 		}
@@ -64,6 +71,9 @@ export default function Home({ setUser }) {
 				setPrevDisplay(null)   // prevents back button on event component from displaying out of date list
 				setSelection("Upcoming Events")
 				setPage(1)
+				if (staffAction !== "create") { // displays updated event list after an event edit or delete
+					setDisplay(eventsParsed)
+				}
 			})
 			.catch((err) => {
 				console.log(err);
@@ -145,6 +155,10 @@ export default function Home({ setUser }) {
 				setPrevDisplay={setPrevDisplay}
 				setNewEventPosted={setNewEventPosted}
 				newEventPosted={newEventPosted}
+				staffAction={staffAction}
+				setStaffAction={setStaffAction}
+				manipulateEventId={manipulateEventId}
+				setManipulateEventId={setManipulateEventId}
 			/>
 			<div className="container h-full md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
 				<div className="calendar my-auto md:pr-14">
@@ -219,7 +233,7 @@ export default function Home({ setUser }) {
 						))}
 					</div>
 				</div>
-				{!display.title && !eventId ? ( // Will display an event if display has a key of title.
+				{!display.event_id ? ( // Will display an event if display has a key of title.
 					<section className="event-display flex flex-col justify-center max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
 						<Dropdown
 							setDisplay={setDisplay}
@@ -234,19 +248,20 @@ export default function Home({ setUser }) {
 						/>
 
 						<ol className="mt-3 max-h-96 h-96 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
-							{!display.title
-								? pageHandler(display, page).map((event, i) => (
+							{
+								pageHandler(display, page).map((event, i) => (
+									
 										<li
 											key={`upcoming${i}`}
-											className="group flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
+											className="group relative flex items-center space-x-4 rounded-xl px-4 py-2 focus-within:bg-gray-100 hover:bg-gray-100"
+										>
+											<div className="flex-auto"
 											onClick={() => {
 												setPrevDisplay(display);
 												setSearchParams({ eventId: event.event_id });
 												setDisplay(event);
 												setEventId(event.event_id);
-											}}
-										>
-											<div className="flex-auto">
+											}}>
 												<p className="text-gray-900">{event.title}</p>
 												<p className="mt-0.5">
 													<time dateTime={""}>
@@ -258,9 +273,38 @@ export default function Home({ setUser }) {
 													</time>
 												</p>
 											</div>
+											<span className="sr-only">Button to edit event</span>
+											<button className="absolute left-0"
+											onClick={() => {
+												setManipulateEventId(event.event_id)
+												setStaffAction("edit")
+												setOpen(true)
+											}}>
+											<PencilSquareIcon
+							className={
+								"h-5 w-5 text-blue-600" + (user.user_id !== event.organiser ? " hidden" : "")
+							}
+							aria-hidden="true"
+						/>
+						</button>
+						<span className="sr-only">Button to delete event</span>
+						<button className="absolute right-0"
+						onClick={() => {
+							setManipulateEventId(event.event_id)
+							setStaffAction("delete")
+							setOpen(true)
+						}}>
+						<TrashIcon	
+							className={
+								"h-5 w-5 text-red-500" + (user.user_id !== event.organiser ? " hidden" : "")
+							}
+							aria-hidden="true"
+						/>
+						</button>
+											
 										</li>
 								  ))
-								: null}
+								}
 						</ol>
 
 						<PageButtons page={page} setPage={setPage} display={display} />
@@ -285,6 +329,9 @@ export default function Home({ setUser }) {
 					onClick={(e) => {
 						e.preventDefault();
 							setOpen(true);
+							if (user.staff) {
+								setStaffAction("create")
+							}
 					}}
 				>
 					{user.staff ? (
