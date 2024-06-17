@@ -40,6 +40,7 @@ export default function Home({ setUser }) {
 	const [selection, setSelection] = useState("Upcoming Events"); // sets text showing in closed dropdown bar
 	const [staffAction, setStaffAction] = useState(null)
 	const [manipulateEventId, setManipulateEventId] = useState("")
+	const [userAttendingThis, setUserAttendingThis] = useState(false)
 
 	const user = useUser();
 
@@ -81,15 +82,16 @@ export default function Home({ setUser }) {
 		}
 	}, [newEventPosted]);
 
-	useEffect(() => { // sets attending list upon user authentication
+	useEffect(() => { // sets attending list upon user authentication. refreshing on attending, cancelling or editing/deleting/posting an event
 		fetchAttending(user.user_id)
 			.then((eventsParsed) => {
 				setAttendingEvents(eventsParsed);
+				setPrevDisplay(null)
 			})
 			.catch((err) => {
 				console.log(err);
 			});
-	}, [user]);
+	}, [user, userAttendingThis, newEventPosted]);
 
 	useEffect(() => { // sets my events list if user is staff and whenever upcoming events changes
 		if (user.staff) {
@@ -319,6 +321,11 @@ export default function Home({ setUser }) {
 						upcomingEvents={upcomingEvents}
 						setSearchParams={setSearchParams}
 						searchParams={searchParams}
+						userAttendingThis={userAttendingThis}
+						setUserAttendingThis={setUserAttendingThis}
+						selection={selection}
+						attendingEvents={attendingEvents}
+						myEvents={myEvents}
 					/>
 				)}
 			</div>
