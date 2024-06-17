@@ -45,7 +45,10 @@ export default function Home({ setUser }) {
 
 	useEffect(() => {  // sets upcoming event lists on load/reload
 		setPage(1)
-		setEventId(searchParams.get("eventId"));
+		setEventId(searchParams.get("eventId") || null);
+		if(eventId) {
+			setDisplay({event_id: eventId})
+		}
 		fetchUpcomingEvents()
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
@@ -62,7 +65,6 @@ export default function Home({ setUser }) {
 			isInitialMount.current = false;
 		}
 		else {
-		console.log("updating lists");
 		fetchUpcomingEvents()
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
@@ -231,7 +233,7 @@ export default function Home({ setUser }) {
 						))}
 					</div>
 				</div>
-				{!display.title && !eventId ? ( // Will display an event if display has a key of title.
+				{!display.event_id ? ( // Will display an event if display has a key of title.
 					<section className="event-display flex flex-col justify-center max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
 						<Dropdown
 							setDisplay={setDisplay}
@@ -246,8 +248,8 @@ export default function Home({ setUser }) {
 						/>
 
 						<ol className="mt-3 max-h-96 h-96 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
-							{!display.title
-								? pageHandler(display, page).map((event, i) => (
+							{
+								pageHandler(display, page).map((event, i) => (
 									
 										<li
 											key={`upcoming${i}`}
@@ -259,7 +261,6 @@ export default function Home({ setUser }) {
 												setSearchParams({ eventId: event.event_id });
 												setDisplay(event);
 												setEventId(event.event_id);
-												console.log(event);
 											}}>
 												<p className="text-gray-900">{event.title}</p>
 												<p className="mt-0.5">
@@ -303,7 +304,7 @@ export default function Home({ setUser }) {
 											
 										</li>
 								  ))
-								: null}
+								}
 						</ol>
 
 						<PageButtons page={page} setPage={setPage} display={display} />

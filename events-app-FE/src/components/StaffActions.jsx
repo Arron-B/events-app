@@ -41,6 +41,8 @@ export default function StaffActions ({staffAction, setStaffAction, errorSuccess
 						setOpen={setOpen}
                         setNewEventPosted={setNewEventPosted}
 						newEventPosted={newEventPosted}
+                        setSearchParams={setSearchParams}
+                        setEventId={setEventId}
             />;
           default:
             return null;

@@ -19,7 +19,6 @@ const DeleteEvent = ({manipulateEventId, setManipulateEventId, errorSuccess, set
             className="relative inline-flex items-center gap-x-1.5 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-500"
             onClick={() => {
                 setSubmitDisabled(true)
-                console.log('clicked');
                 deleteEvent(manipulateEventId).then((res) => {
                     setNewEventPosted(newEventPosted + 1)
                     setErrorSuccess("Successfully deleted event.")
