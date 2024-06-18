@@ -106,7 +106,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 						</dd>
 					</div>
 					<div className="mt-4 flex w-full flex-none gap-x-2 border-t border-gray-900/5 px-6 pt-6">
-						<dt className="flex-none">Organiser:</dt>
+						<dt className="flex-none text-sm leading-6 font-medium">Organiser:</dt>
 						<dd className="flex gap-x-1 text-sm font-medium leading-6 text-gray-900">
 							<UserCircleIcon
 								className="h-6 w-5 text-gray-400"
@@ -217,7 +217,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 								aria-hidden="true"
 							/>{" "}
 						</button>{" "}
-						<p className="text-md leading-6 text-gray-500">{userAttendingThis ? "Cancel" : "Attend Event"}</p>
+						<p className="text-md leading-6 text-gray-500 landscape:md:text-sm">{userAttendingThis ? "Cancel" : "Attend Event"}</p>
 					</div>
 					<div className="mt-4 flex w-full flex-none gap-x-4 px-6">
 						<span className="sr-only">Button add event to google calendar</span>
@@ -230,7 +230,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 							aria-hidden="true"
 						/>
 
-						<p className="text-md leading-6 text-gray-500">
+						<p className="text-md leading-6 text-gray-500 landscape:md:text-sm">
 							Add to Google Calendar
 						</p>
 						</a>
@@ -265,7 +265,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 								className="h-5 w-5"
 								aria-hidden="true"
 							/>
-							<p className="text-md leading-6 text-gray-500">
+							<p className="text-md leading-6 text-gray-500 landscape:md:text-sm">
 							Back
 						</p>
 						</button>

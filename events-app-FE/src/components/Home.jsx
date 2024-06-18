@@ -123,7 +123,7 @@ export default function Home({ setUser }) {
 				manipulateEventId={manipulateEventId}
 				setManipulateEventId={setManipulateEventId}
 			/>
-			<div className="container h-full md:grid md:grid-cols-2 md:grid-rows-1 md:divide-x md:divide-gray-200 mt-20 mb-8">
+			<div className="container portrait:h-[80svh] portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-2 landscape:grid-rows-1 landscape:divide-x landscape:divide-gray-200">
 
 				<Calendar
 				today={today}
@@ -135,7 +135,7 @@ export default function Home({ setUser }) {
 				/>
 				
 				{!display.event_id ? ( // Will display an event if display has a key of title.
-					<section className="event-display flex flex-col justify-center max-h-full mt-12 md:mt-0 md:pl-14 col-start-2 row-start-1">
+					<section className="event-display landscape:my-4 portrait:mt-0 flex flex-col justify-center max-h-full md:mt-0 md:pl-14 col-start-2 row-start-1">
 						<Dropdown
 							setDisplay={setDisplay}
 							display={display}
@@ -228,7 +228,7 @@ export default function Home({ setUser }) {
 					/>
 				)}
 			</div>
-			<div className="flex justify-around w-full md:w-3/4">
+			<div className="flex justify-around w-full md:w-3/4 fixed bottom-5">
 				<button
 					type="button"
 					className="relative w-1/3 md:w-[20%] inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"

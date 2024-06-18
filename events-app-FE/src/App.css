@@ -10,3 +10,113 @@
 	justify-content: center;
 	align-items: center;
 }
+
+html {
+	overscroll-behavior: none;
+}
+
+@media (orientation: portrait) and (max-width: 319px) {
+	/* galaxy fold type phones and old smaller smartphones */
+	html,
+	body {
+		font-size: 65%;
+	}
+}
+@media (orientation: portrait) and (min-width: 320px) {
+	/* smartphones */
+	html,
+	body {
+		font-size: 75%;
+	}
+}
+@media (orientation: portrait) and (min-width: 481px) {
+	/* portrait e-readers (Nook/Kindle), smaller tablets @ 600 or @ 640 wide. */
+	html,
+	body {
+		font-size: 90%;
+	}
+}
+@media (orientation: portrait) and (min-width: 641px) {
+	/* portrait tablets, portrait iPad, landscape e-readers */
+	html,
+	body {
+		font-size: 100%;
+	}
+}
+@media (orientation: portrait) and (min-width: 961px) {
+	/* Large portrait tablets and portrait monitors */
+
+	html,
+	body {
+		font-size: 125%;
+	}
+}
+
+/*                Landscape queries                */
+
+@media (orientation: landscape) and (max-width: 849px) {
+	/* landscape phones and landscape small tablets */
+	html,
+	body {
+		font-size: 55%;
+	}
+	.container{
+		margin-bottom: none;
+	}
+}
+
+@media (orientation: landscape) and (min-width: 850px) {
+	/* landscape phones and landscape small tablets */
+	html,
+	body {
+		font-size: 70%;
+	}
+}
+
+@media (orientation: landscape) and (min-width: 950px) {
+	/* landscape phones and landscape small tablets */
+	html,
+	body {
+		font-size: 110%;
+	}
+}
+
+@media (orientation: landscape) and (min-width: 1025px) {
+	/*landscape tablets, laptops, and desktops */
+	html,
+	body {
+		font-size: 115%;
+	}
+}
+
+@media (orientation: landscape) and (min-width: 1281px) {
+	/* big landscape tablets, hi-res laptops and desktops */
+	html,
+	body {
+		font-size: 120%;
+	}
+}
+
+@media (orientation: landscape) and (min-width: 1881px) {
+	/* big landscape tablets, hi-res laptops and desktops */
+	html,
+	body {
+		font-size: 140%;
+	}
+}
+
+@media (orientation: landscape) and (min-width: 2300px) {
+	/* hi-res laptops and desktops */
+	html,
+	body {
+		font-size: 210%;
+	}
+}
+
+@media (orientation: landscape) and (min-width: 3840px) {
+	/* 4k */
+	html,
+	body {
+		font-size:290%;
+	}
+}
