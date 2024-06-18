@@ -44,6 +44,10 @@ export default function Home({ setUser }) {
 
 	const user = useUser();
 
+	useEffect(() => {
+		if (!isInitialMount.current) setSelection("Events on " + format(selectedDay, 'MMM dd, yyy'))
+	}, [selectedDay])
+
 	useEffect(() => {  // sets upcoming event lists on load/reload
 		setPage(1)
 		setEventId(searchParams.get("eventId") || null);
@@ -56,7 +60,6 @@ export default function Home({ setUser }) {
 				setDisplay(eventsParsed);
 			})
 			.catch((err) => {
-				console.log(err);
 			});
 			
 	}, []);
@@ -77,7 +80,6 @@ export default function Home({ setUser }) {
 				}
 			})
 			.catch((err) => {
-				console.log(err);
 			});
 		}
 	}, [newEventPosted]);
@@ -89,7 +91,6 @@ export default function Home({ setUser }) {
 				setPrevDisplay(null)
 			})
 			.catch((err) => {
-				console.log(err);
 			});
 	}, [user, userAttendingThis, newEventPosted]);
 
@@ -100,11 +101,6 @@ export default function Home({ setUser }) {
 		}
 	}, [upcomingEvents]);
 
-	useEffect(() => {
-		setSelection("Events on " + format(selectedDay, 'MMM dd, yyy'))
-	}, [selectedDay])
-
-	
 
 	return user ? (
 		<>

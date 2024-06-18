@@ -29,13 +29,11 @@ function App() {
 					combineUserData(user, res.data.user);
 				})
 				.catch((err) => {
-					console.log(err);
 					postNewUser(user.sub, user.name)
 						.then((res) => {
 							combineUserData(user, res.data.user);
 						})
 						.catch((err) => {
-							console.log(err);
 						});
 				});
 		}

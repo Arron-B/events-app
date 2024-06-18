@@ -69,7 +69,6 @@ const EditEvent = ({manipulateEventId, setManipulateEventId, errorSuccess, setEr
 											setSearchParams({eventId: event.event_id})
 										}, 3000)
 									}).catch((err) => {
-										console.log(err);
 										setErrorSuccess("Failed to edit event.")
 										setTimeout(() => {
 											setErrorSuccess("")

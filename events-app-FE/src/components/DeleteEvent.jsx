@@ -28,7 +28,6 @@ const DeleteEvent = ({manipulateEventId, setManipulateEventId, errorSuccess, set
                         setErrorSuccess("")
                     }, 3000)
                 }).catch((err) => {
-                    console.log(err);
                     setErrorSuccess("Failed to delete.")
                     setTimeout(() => {
                         setErrorSuccess("")

@@ -44,11 +44,9 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 						setIsLoading(false)
 					})
 					.catch((err) => {
-						console.log(err);
 					});
 			})
 			.catch((err) => {
-				console.log(err);
 			});
 
 		fetchAttendance(eventId)
@@ -58,7 +56,6 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 
 			})
 			.catch((err) => {
-				console.log(err);
 			});
 
 		fetchAttendees(eventId)
@@ -182,7 +179,6 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 									setTimeout(() => {
 										setAttendButtonActive(true)
 									}, 3000)
-									console.log(err)
 								})
 							}}
 						>
@@ -204,7 +200,6 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 										setAttendButtonActive(true)
 									}, 3000)
 								}).catch((err) => {
-									console.log(err)
 									setTimeout(() => {
 										setAttendButtonActive(true)
 									}, 3000)

@@ -36,7 +36,6 @@ const CreateEvent = ({errorSuccess, setErrorSuccess, submitDisabled, setSubmitDi
 											setDisplay(event)
 										}, 3000)
 									}).catch((err) => {
-										console.log(err);
 										setErrorSuccess("Failed to create event.")
 										setTimeout(() => {
 											setErrorSuccess("")
