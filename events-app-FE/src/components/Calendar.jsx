@@ -31,7 +31,7 @@ const Calendar = ({today, setToday, selectedDay, setSelectedDay, upcomingEvents,
     };
 
     return (
-        <div className="calendar my-auto md:pr-14">
+        <div className="calendar my-auto landscape:md:pr-14 portrait:relative">
 					<div className="flex items-center">
 						<h2 className="flex-auto text-sm font-semibold text-gray-900">
 							{format(firstDayCurrentMonth, 'MMMM yyyy')}
@@ -40,7 +40,8 @@ const Calendar = ({today, setToday, selectedDay, setSelectedDay, upcomingEvents,
                             onClick={previousMonth}
                             disabled={currentMonth === format(today, 'MMM-yyyy')}
 							type="button"
-							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400
+                             hover:text-gray-500 portrait:absolute portrait:-left-6 portrait:top-1/2"
 						>
 							<span className="sr-only">Previous month</span>
 							<ChevronLeftIcon
@@ -51,7 +52,7 @@ const Calendar = ({today, setToday, selectedDay, setSelectedDay, upcomingEvents,
 						<button
                             onClick={nextMonth}
 							type="button"
-							className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+							className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 portrait:absolute portrait:-right-6 portrait:top-1/2"
 						>
 							<span className="sr-only">Next month</span>
 							<ChevronRightIcon
