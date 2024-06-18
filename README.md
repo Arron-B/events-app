@@ -7,11 +7,11 @@ HOSTED PROJECT
 The hosted version of this project can be found at: https://events-app-u5vr.onrender.com
 
 Please add any endpoint from the endpoints.json file to see the results. Alternatively paste the example below into your browser to fetch the available endpoints from the API:
-E.g. https://events-app-u5vr.onrender.com/api/endpoints
+E.g. https://events-app-u5vr.onrender.com/api
 
 SUMMARY
 
-This project is an API for my first freelance project, an events application. It utilises express with postgresql and is set up as an MVC environment, built with TDD with the help of NodeJS and Jest.
+This project is an API for my first freelance project, an events application. It utilises express with postgresql and is set up as an MVC environment, built using TDD (Test Driven Development) with the help of NodeJS and Jest.
 
 LOCAL SET UP
 
@@ -98,7 +98,7 @@ Install dependencies:
 
 (From the root directory)
 
-- cd ./events-app-API
+- cd ./events-app-FE
 - npm install
 
 To be able to run the app locally create the following file in the events-app-FE directory:
