@@ -135,7 +135,7 @@ export default function Home({ setUser }) {
 				/>
 				
 				{!display.event_id ? ( // Will display an event if display has a key of title.
-					<section className="event-display landscape:my-4 portrait:mt-0 flex flex-col justify-center max-h-full md:mt-0 md:pl-14 col-start-2 row-start-1">
+					<section className="event-display landscape:my-4 portrait:mt-0 flex flex-col justify-center max-h-full md:mt-0 landscape:md:pl-14 col-start-2 row-start-1">
 						<Dropdown
 							setDisplay={setDisplay}
 							display={display}
@@ -231,7 +231,7 @@ export default function Home({ setUser }) {
 			<div className="flex justify-around w-full md:w-3/4 fixed bottom-5">
 				<button
 					type="button"
-					className="relative w-1/3 md:w-[20%] inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+					className="relative w-1/3 md:w-[20%] inline-flex items-center justify-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
 					onClick={(e) => {
 						e.preventDefault();
 							setOpen(true);
