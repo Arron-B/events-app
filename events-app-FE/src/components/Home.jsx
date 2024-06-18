@@ -119,7 +119,7 @@ export default function Home({ setUser }) {
 				manipulateEventId={manipulateEventId}
 				setManipulateEventId={setManipulateEventId}
 			/>
-			<div className="container portrait:h-[80svh] portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-2 landscape:grid-rows-1 landscape:divide-x landscape:divide-gray-200">
+			<div className="portrait:pb-8 container portrait:h-[80svh] portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-2 landscape:grid-rows-1 landscape:divide-x landscape:divide-gray-200">
 
 				<Calendar
 				today={today}
@@ -144,7 +144,7 @@ export default function Home({ setUser }) {
 							setSelection={setSelection}
 						/>
 
-						<ol className="mt-3 max-h-96 h-96 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
+						<ol className="mt-3 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
 							{
 								pageHandler(display, page).map((event, i) => (
 									
