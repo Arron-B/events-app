@@ -81,7 +81,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 		<div className="">
 			<h2 className="sr-only">Event titled {event.title}</h2>
 			<div className="h-full flex flex-col justify-around rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
-				<dl className="flex flex-wrap">
+				<dl className="relative flex flex-wrap">
 					<div className="flex-auto pl-6">
 						<dt className="text-sm font-semibold leading-6 text-gray-900">
 							<span className="sr-only">Event title</span>
@@ -233,7 +233,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 					<div className="mt-4 flex flex-none px-6">
 					<button
 							type="button"
-							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500"
+							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 portrait:absolute portrait:top-28 portrait:right-10"
 							onClick={() => {
 									
 									if (prevDisplay) {
