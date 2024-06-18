@@ -119,7 +119,7 @@ export default function Home({ setUser }) {
 				manipulateEventId={manipulateEventId}
 				setManipulateEventId={setManipulateEventId}
 			/>
-			<div className="portrait:pb-8 container portrait:h-[80svh] portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-2 landscape:grid-rows-1 landscape:divide-x landscape:divide-gray-200">
+			<div className="portrait:pb-6 container portrait:h-[80svh] portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-2 landscape:grid-rows-1 landscape:divide-x landscape:divide-gray-200">
 
 				<Calendar
 				today={today}
