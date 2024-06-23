@@ -16,7 +16,7 @@ import {
 import { google } from "calendar-link";
 import Loading from "./Loading";
 
-export default function Event({ event, eventId, setEventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams, searchParams, userAttendingThis, setUserAttendingThis, selection, attendingEvents, myEvents }) {
+export default function Event({ event, eventId, prevDisplay,  setDisplay, upcomingEvents, setSearchParams, searchParams, userAttendingThis, setUserAttendingThis, selection, attendingEvents, myEvents }) {
 	const [organiser, setOrganiser] = useState(null);
 	const [attendance, setAttendance] = useState(null);
 	
@@ -49,15 +49,6 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 			.catch((err) => {
 			});
 
-		fetchAttendance(eventId)
-			.then((res) => {
-				
-				setAttendance(res.data.attendance.attendance)
-
-			})
-			.catch((err) => {
-			});
-
 		fetchAttendees(eventId)
 		.then((res) => {
 			const attendees = res.data.attendees
@@ -73,9 +64,16 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 				setUserAttendingThis(false)
 				setIsLoading(false)
 			})
-		
-		
 	}, [eventId, searchParams]);
+
+	useEffect(() => {
+		fetchAttendance(eventId)
+			.then((res) => {
+				setAttendance(res.data.attendance.attendance)
+			})
+			.catch((err) => {
+			});
+	},[userAttendingThis])
 
 	return event.datetime && !isLoading ? (
 		<div className="">
@@ -169,6 +167,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 							className={"rounded-full bg-indigo-600 p-1 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600" + (userAttendingThis ? " hidden" : "")}
 							onClick={() => {
 								setAttendButtonActive(false)
+								setAttendance(attendance + 1)
 								attendEvent(eventId, user.user_id).then((res) => {
 									setUserAttendingThis(true)
 									setTimeout(() => {
@@ -194,6 +193,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 							className={"rounded-full bg-red-600 p-1 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600" + (!userAttendingThis ? " hidden" : "")}
 							onClick={() => {
 								setAttendButtonActive(false)
+								setAttendance(attendance - 1)
 								removeAttendEvent(eventId, user.user_id).then((res) => {
 									setUserAttendingThis(false)
 									setTimeout(() => {
@@ -234,9 +234,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 					<button
 							type="button"
 							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 portrait:absolute portrait:top-28 portrait:right-10 landscape:mb-2"
-							onClick={() => {
-									console.log(prevDisplay);
-									
+							onClick={() => {	
 									if (prevDisplay) {
 										setDisplay(prevDisplay)
 										setSearchParams("")
