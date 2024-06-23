@@ -73,7 +73,6 @@ export default function Home({ setUser }) {
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
 				setPrevDisplay(null)   // prevents back button on event component from displaying out of date list
-				console.log('line 76');
 				setSelection("Upcoming Events")
 				setPage(1)
 				if (staffAction !== "create") { // displays updated event list after an event edit or delete
@@ -89,7 +88,6 @@ export default function Home({ setUser }) {
 		fetchAttending(user.user_id)
 			.then((eventsParsed) => {
 				setAttendingEvents(eventsParsed);
-				console.log('line 92');
 				setPrevDisplay(null)
 			})
 			.catch((err) => {
@@ -121,7 +119,7 @@ export default function Home({ setUser }) {
 				manipulateEventId={manipulateEventId}
 				setManipulateEventId={setManipulateEventId}
 			/>
-			<div className="portrait:pb-6 container portrait:h-[80svh] portrait:flex portrait:flex-col landscape:grid landscape:grid-cols-2 landscape:grid-rows-1 landscape:divide-x landscape:divide-gray-200">
+			<div className="portrait:pb-6 container portrait:h-[90svh] portrait:grid portrait:grid-cols-1 portrait:grid-rows-2 landscape:h-full landscape:grid landscape:grid-cols-2 landscape:grid-rows-1">
 
 				<Calendar
 				today={today}
@@ -135,7 +133,7 @@ export default function Home({ setUser }) {
 				/>
 				
 				{!display.event_id ? ( // Will display an event if display has a key of title.
-					<section className="event-display landscape:my-4 portrait:mt-0 flex flex-col justify-center max-h-full md:mt-0 landscape:md:pl-14 col-start-2 row-start-1">
+					<section className="event-display portrait:row-start-2 portrait:col-span-2 landscape:my-4 portrait:mt-0 flex flex-col justify-center max-h-full md:mt-0 landscape:md:pl-14 col-start-2 row-start-1">
 						<Dropdown
 							setDisplay={setDisplay}
 							display={display}
@@ -148,7 +146,7 @@ export default function Home({ setUser }) {
 							setSelection={setSelection}
 						/>
 
-						<ol className="mt-3 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
+						<ol className="mt-3 portrait:h-96 landscape:h-96 overflow-y-hidden space-y-1 text-sm leading-6 text-gray-500">
 							{
 								pageHandler(display, page).map((event, i) => (
 									
@@ -228,7 +226,7 @@ export default function Home({ setUser }) {
 					/>
 				)}
 			</div>
-			<div className="flex justify-around w-full md:w-3/4 fixed bottom-5">
+			<div className="flex justify-around w-full md:w-3/4 absolute bottom-5">
 				<button
 					type="button"
 					className="relative w-1/3 md:w-[20%] inline-flex items-center justify-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"

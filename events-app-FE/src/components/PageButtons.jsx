@@ -3,7 +3,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 function PageButtons({ page, setPage, display }) {
 	return (
 		<>
-			<div className="flex w-full mx-auto justify-center">
+			<div className="flex w-full mx-auto justify-center mt-2">
 				<button
 					type="button"
 					className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 w-1/3"
@@ -18,7 +18,7 @@ function PageButtons({ page, setPage, display }) {
 						aria-hidden="true"
 					/>
 				</button>
-				<p className="landscape:md:text-sm portrait:md:text-sm">{page}</p>
+				<p className="landscape:md:text-sm portrait:md:text-sm">{page} / {Math.ceil(display.length/5)}</p>
 				<button
 					type="button"
 					className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 w-1/3"

@@ -1,6 +1,6 @@
 export default function Loading() {
 	return (
-		<div className="flex gap-2 justify-center min-h-[140px] place-items-center overflow-x-hidden rounded-lg p-6">
+		<div className="flex gap-2 justify-center min-h-[140px] place-items-center overflow-x-hidden rounded-lg p-6 h-full">
 			<svg
 				className="text-gray-300 animate-spin"
 				viewBox="0 0 64 64"
