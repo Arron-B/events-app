@@ -235,6 +235,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 							type="button"
 							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 portrait:absolute portrait:top-28 portrait:right-10"
 							onClick={() => {
+									console.log(prevDisplay);
 									
 									if (prevDisplay) {
 										setDisplay(prevDisplay)

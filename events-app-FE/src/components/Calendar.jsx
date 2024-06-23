@@ -7,7 +7,7 @@ function classNames(...classes) {
 	return "relative " + classes.filter(Boolean).join(" ");
 }
 
-const Calendar = ({today, setToday, selectedDay, setSelectedDay, upcomingEvents, setDisplay}) => {
+const Calendar = ({today, selectedDay, setSelectedDay, upcomingEvents, setDisplay, setPage, setPrevDisplay}) => {
 
     const [currentMonth, setCurrentMonth] = useState(format(today, 'MMM-yyyy'))  
     
@@ -84,8 +84,10 @@ const Calendar = ({today, setToday, selectedDay, setSelectedDay, upcomingEvents,
 									type="button"
                                     onClick={() => {
                                         setSelectedDay(day)
+										setPage(1)
                                         const dayEvents = upcomingEvents.filter((event) => isSameDay(event.datetime, day))
                                         setDisplay(dayEvents)
+										setPrevDisplay(dayEvents)
                                     }}
 									className={classNames(
 										isEqual(day, selectedDay) && "text-white",

@@ -73,6 +73,7 @@ export default function Home({ setUser }) {
 			.then((eventsParsed) => {
 				setUpcomingEvents(eventsParsed);
 				setPrevDisplay(null)   // prevents back button on event component from displaying out of date list
+				console.log('line 76');
 				setSelection("Upcoming Events")
 				setPage(1)
 				if (staffAction !== "create") { // displays updated event list after an event edit or delete
@@ -88,11 +89,12 @@ export default function Home({ setUser }) {
 		fetchAttending(user.user_id)
 			.then((eventsParsed) => {
 				setAttendingEvents(eventsParsed);
+				console.log('line 92');
 				setPrevDisplay(null)
 			})
 			.catch((err) => {
 			});
-	}, [user, userAttendingThis, newEventPosted]);
+	}, [user, newEventPosted]);
 
 	useEffect(() => { // sets my events list if user is staff and whenever upcoming events changes
 		if (user.staff) {
@@ -128,6 +130,8 @@ export default function Home({ setUser }) {
 				setSelectedDay={setSelectedDay}
 				upcomingEvents={upcomingEvents}
 				setDisplay={setDisplay}
+				setPage={setPage}
+				setPrevDisplay={setPrevDisplay}
 				/>
 				
 				{!display.event_id ? ( // Will display an event if display has a key of title.
