@@ -41,22 +41,22 @@ const Calendar = ({today, selectedDay, setSelectedDay, upcomingEvents, setDispla
                             disabled={currentMonth === format(today, 'MMM-yyyy')}
 							type="button"
 							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400
-                             hover:text-gray-500 portrait:absolute portrait:-left-6 portrait:top-1/2"
+                             hover:text-gray-500 portrait:absolute portrait:-left-6 portrait:top-0 portrait:h-full"
 						>
 							<span className="sr-only">Previous month</span>
 							<ChevronLeftIcon
-								className="h-5 w-5"
+								className="h-5 w-5 portrait:h-full portrait:w-10"
 								aria-hidden="true"
 							/>
 						</button>
 						<button
                             onClick={nextMonth}
 							type="button"
-							className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 portrait:absolute portrait:-right-6 portrait:top-1/2"
+							className="-my-1.5 -mr-1.5 ml-2 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 portrait:absolute portrait:-right-6 portrait:top-0 portrait:h-full"
 						>
 							<span className="sr-only">Next month</span>
 							<ChevronRightIcon
-								className="h-5 w-5"
+								className="h-5 w-5 portrait:h-full portrait:w-10"
 								aria-hidden="true"
 							/>
 						</button>

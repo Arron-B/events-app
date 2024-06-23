@@ -6,12 +6,12 @@ export default function Nav() {
 
 	return user ? (
 		<nav
-			className="flex w-full justify-around fixed top-5 portrait:justify-between portrait:px-5"
+			className="absolute top-4 flex w-full justify-between portrait:justify-between px-5"
 			aria-label="Breadcrumb"
 		>
 			<a
 				href="/"
-				className="text-gray-400 hover:text-gray-500"
+				className="text-gray-400 hover:text-gray-500 landscape:place-self-start"
 			>
 				<HomeIcon
 					className="h-8 w-8 flex-shrink-0"

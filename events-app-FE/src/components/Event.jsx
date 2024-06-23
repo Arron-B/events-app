@@ -83,7 +83,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 			<div className="h-full flex flex-col justify-around rounded-lg bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
 				<dl className="relative flex flex-wrap">
 					<div className="flex-auto pl-6">
-						<dt className="text-sm font-semibold leading-6 text-gray-900">
+						<dt className="text-sm mt-2 font-semibold leading-6 text-gray-900">
 							<span className="sr-only">Event title</span>
 						</dt>
 						<dd className="text-base text-start font-semibold leading-6 text-gray-900">
@@ -233,7 +233,7 @@ export default function Event({ event, eventId, setEventId, prevDisplay,  setDis
 					<div className="mt-4 flex flex-none px-6">
 					<button
 							type="button"
-							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 portrait:absolute portrait:top-28 portrait:right-10"
+							className="-my-1.5 flex flex-none items-center justify-center p-1.5 text-gray-400 hover:text-gray-500 portrait:absolute portrait:top-28 portrait:right-10 landscape:mb-2"
 							onClick={() => {
 									console.log(prevDisplay);
 									
