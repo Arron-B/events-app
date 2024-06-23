@@ -94,7 +94,7 @@ export default function Modal({ open, setOpen, setEventId, setSearchParams, setD
 									>
 										Password
 									</label>
-									<div className="mt-2">
+									<div className="mt-2 portrait:w-80">
 										<input
 											type="password"
 											name="password"
@@ -105,6 +105,12 @@ export default function Modal({ open, setOpen, setEventId, setSearchParams, setD
 											value={password}
 											onChange={(e) => setPassword(e.target.value)}
 										/>
+										<button
+										type="submit"
+										disabled={submitDisabled}
+					className="block mx-auto items-center justify-center mt-2 gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+				Submit
+				</button>
 									</div>
 									<p
 										className={
