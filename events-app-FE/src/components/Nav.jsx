@@ -1,8 +1,12 @@
 import { HomeIcon } from "@heroicons/react/20/solid";
 import { useUser } from "../UserContext.jsx";
+import { useAuth0 } from "@auth0/auth0-react";
+import React from "react";
 
 export default function Nav() {
 	const user = useUser();
+	const { logout } = useAuth0();
+	const logoutRedirect = import.meta.env.VITE_LOCAL_HOST || import.meta.env.VITE_REDIRECT_URL
 
 	return user ? (
 		<nav
@@ -40,6 +44,11 @@ export default function Nav() {
 						<p className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
 							{user.name}
 						</p>
+						<p className="text-xs font-medium text-gray-500 group-hover:text-gray-700"
+						onClick={() =>
+							logout({ logoutParams: { returnTo: logoutRedirect } })
+						}
+						>Log out</p>
 					</div>
 				</div>
 			</a>

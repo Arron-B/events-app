@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { useUser } from "../UserContext.jsx";
 import { startOfToday, format, isSameDay } from "date-fns";
 import { fetchUpcomingEvents, fetchAttending, staffVerify } from "../api.js";
-import LogoutButton from "./LogoutButton.jsx";
 import Modal from "./Modal.jsx";
 import Event from "./Event.jsx";
 import Calendar from "./Calendar.jsx";
@@ -251,7 +250,6 @@ export default function Home({ setUser }) {
 					)}
 					{user.staff ? "New Event" : "Staff Verify"}
 				</button>
-				<LogoutButton />
 			</div>
 		</>
 	) : null;
